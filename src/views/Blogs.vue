@@ -8,8 +8,12 @@
 
 
     <div class="blogbox">
-       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in description">Blog:{{descrebe.description}}---------------作者:{{descrebe.author}}</ul>
+       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in description">Blog{{descrebe.id}}:{{descrebe.description}}---------------作者:{{descrebe.authorid}}</ul>
+       <div>
+      <button @click=event_download>下载</button>
     </div>
+    </div>
+    
   </div>
 </body>
 </template>
@@ -18,46 +22,100 @@
 import { useRouter } from 'vue-router'
 import { ref, reactive } from "vue"
 import { useRoute } from 'vue-router'
+import api from "../utils/axios_blog";
+import popup_message from "../utils/message_popup";
 const route = useRouter();
 
-let description = 
-    [{
-    id:"1",
+let description = reactive(
+    [
+
+  {
+    id:1,
     description: "1",
-    author:"1"
+    authorid:1
   },
   {
-    id:"2",
+    id:2,
     description: "2",
-    author:"2"
+    authorid:2
   },
   {
-    id:"3",
+    id:3,
     description: "3",
-    author:"3"
+    authorid:3
   },
   {
-    id:"4",
+    id:4,
     description: "4",
-    author:"4"
+    authorid:4
   },
   {
-    id:"5",
+    id:5,
     description: "5",
-    author:"5"
+    authorid:5
   },
   {
-    id:"6",
+    id:6,
     description: "6",
-    author:"6"
-  },]
+    authorid:6
+  },])
 
 
-
-
-interface BlogInfomation {
-    id: string
+interface sendbid{
+  id:number
 }
+
+interface BlogInfo {
+    id:number
+    authorid: number
+    description: string
+    content: string
+    status: number
+}
+
+interface CodeInfo<T> {
+    code:string
+    message: string
+    data : T
+}
+
+let blogget:CodeInfo<BlogInfo>= reactive(
+    {
+      code: "",
+      message: "",
+      data: {
+        id:0,
+        authorid: 0,
+        description: "",
+        content: "",
+        status: 0
+      }
+    }
+)
+
+
+
+function event_download(){
+
+  for (let index = 1; index <= 6; index++) {
+    let sendbids: sendbid = {
+        id: index,
+    }
+
+    api.get("/blog/?id="+index).then(response => {
+        description[index-1].authorid = response.data.data.authorid
+        description[index-1].id = response.data.data.id
+        description[index-1].description = response.data.data.description
+        popup_message("get成功", "success")
+    }).catch(error => {
+        popup_message("get失败: " + error.message, "error")
+    })
+    
+  }
+  
+}
+
+
 
 
 </script>
@@ -116,4 +174,16 @@ body {
     color: rgba(213, 201, 201, 0.9);
 
 }
+
+.box > button{
+    margin: 10px;
+    width: 130px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(123, 2, 24, 0.5);
+    background-color: rgba(123, 2, 24, 0.4);
+    color: rgba(0,0,0,0.7);
+    transition: 1s;
+}
+
 </style>
