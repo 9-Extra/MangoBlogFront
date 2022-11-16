@@ -19,6 +19,7 @@ interface Props {
   modelValue?: string;
   ids?: Number;
 }
+
 let props = withDefaults(defineProps<Props>(), {
   modelValue: "" ,// v-model绑定的属性值
   ids: undefined
