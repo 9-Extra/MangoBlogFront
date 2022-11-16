@@ -72,7 +72,7 @@ function event_register_click() {
         if (data.code != 0){
             popup_message("注册失败: " + data.message, "error")
         } else {
-            popup_message("注册成功", "success")
+            popup_message("注册成功 id:" + data.data, "success")
             emit("update:ids", data.data);
         }
 
@@ -198,14 +198,14 @@ body {
     width: 130px;
     height: 40px;
     border-radius: 20px;
-    border: 1px solid rgba(123, 2, 24, 0.5);
-    background-color: rgba(123, 2, 24, 0.4);
-    color: rgba(0,0,0,0.7);
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
     transition: 1s;
 }
 
 .box > button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
-    background-color: rgba(255, 34, 56, 0.4);
+    background-color: rgba(255, 34, 56, 0.838);
 }
 </style>
