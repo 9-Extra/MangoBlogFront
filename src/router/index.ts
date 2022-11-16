@@ -9,7 +9,7 @@ const Home = () => import("../views/home.vue");
 const About = () => import("../views/about.vue");
 const NotFound = () => import("../views/NotFound.vue");
 const BlogSend = () => import("../views/BlogSend.vue");
-const Blogs = () => import("../views/BlogSend.vue");
+const Blogs = () => import("../views/Blogs.vue");
 
 // 这里要注意一点，如下面这种写的话会报错，ts
 // {

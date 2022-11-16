@@ -35,7 +35,7 @@ const emit = defineEmits<{
 
 function event_jumpto_home() {
     //跳转页面
-    route.push({path:'/Page'})
+    route.push({path:'/Blogs'})
 }
 
 function event_jumpto_register() {

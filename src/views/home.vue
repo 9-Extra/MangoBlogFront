@@ -1,36 +1,3 @@
-<template>
-
-    <div class="header">
-
-        <ul style="list-style-type:none">
-            <div>
-                <li><a @click=event_jumpto_home>首页</a></li>
-            </div>
-            <div>
-                <li><a href="#">我的主页</a></li>
-            </div>
-            <div>
-                <li><a @click=event_jumpto_BlogSend>发布</a></li>
-            </div>
-            <div>
-                <li><a @click=event_jumpto_register>注册</a></li>
-            </div>
-            <div>
-                <li><a @click=event_jumpto_login>登录</a></li>
-            </div>
-
-
-        </ul>
-
-
-    </div>
-
-    <Register v-show="registervisible" v-model:ids="idsend"></Register>
-    <Login v-show="loginvisible" v-model="tokensend" v-model:ids="idsend"></Login>
-    <BlogSend v-show="sendvisible" v-model:ids="idsend" v-model:modelValue="tokensend"></BlogSend>
-
-
-</template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
