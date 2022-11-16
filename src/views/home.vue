@@ -46,16 +46,7 @@ let idsend = ref<Number>(0);
 </script>
 
 <template>
-
-
-
-  <Headline v-model:registershow="registervisible" v-model:loginshow="loginvisible" v-model:sendshow="sendvisible"></Headline>
-
-  <Register v-show="registervisible" v-model:ids="idsend"></Register>
-  <Login v-show="loginvisible" v-model="tokensend" v-model:ids="idsend"></Login>
-  <BlogSend v-show="sendvisible" v-model:ids="idsend" v-model:modelValue="tokensend"></BlogSend>
-
-
+    <h2>这是首页！！！！！</h2>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

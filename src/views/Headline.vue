@@ -13,54 +13,6 @@ interface CodeInfo<T> {
     message: string
     data : T
 }
-
-
-// 传递的方法
-
-interface Props {
-  registershow?:boolean;
-  loginshow?:boolean;
-  sendshow?:boolean;
-}
-let props = withDefaults(defineProps<Props>(), {
-  registershow:true,
-  loginshow:false,
-  sendshow:false
-});
-const emit = defineEmits<{
-  (e: "update:registershow", visible: boolean): boolean;
-  (e: "update:loginshow", visible: boolean): boolean;
-  (e: "update:sendshow", visible: boolean): boolean;
-}>();
-
-function event_jumpto_home() {
-    //跳转页面
-    route.push({path:'/Blogs'})
-}
-
-function event_jumpto_register() {
-    emit("update:registershow", true);
-    emit("update:loginshow", false);
-    emit("update:sendshow", false);
-}
-
-function event_jumpto_BlogSend() {
-    emit("update:registershow", false);
-    emit("update:loginshow", false);
-    emit("update:sendshow", true);
-}
-
-function event_jumpto_login() {
-    emit("update:registershow", false);
-    emit("update:loginshow", true);
-    emit("update:sendshow", false);
-}
-
-
-
-
-
-
 </script>
 
 <template>
@@ -71,16 +23,16 @@ function event_jumpto_login() {
     
     <ul style="list-style-type:none">
       <div>
-      <li><a @click=event_jumpto_home>首页</a></li>
+      <li><RouterLink to="/">首页</RouterLink></li>
       </div>
       <div>
-        <li><a @click=event_jumpto_BlogSend>发布</a></li>
+        <li><RouterLink to="/BlogSend">发布</RouterLink></li>
       </div>
       <div>
-        <li><a @click=event_jumpto_register>注册</a></li>
+        <li><RouterLink to="/Register">注册</RouterLink></li>
       </div>
       <div>
-        <li><a @click=event_jumpto_login>登录</a></li>
+        <li><RouterLink to="/Login">登录</RouterLink></li>
       </div>
     </ul>
 

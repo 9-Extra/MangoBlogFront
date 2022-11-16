@@ -1,9 +1,12 @@
 <script setup lang="ts">
-
+import Headline from "@/views/Headline.vue";
 </script>
 
 <template>
-  <router-view></router-view>
+    <div>
+        <Headline/>
+    </div>
+    <router-view></router-view>
 </template>
 
 <style>
