@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue"
-import api from "../utils/axios_blog";
-import popup_message from "../utils/message_popup";
-import { useRouter } from 'vue-router'
-import { parseStringStyle } from "@vue/shared";
+import api from "@/utils/axios_blog";
+import popup_message from "@/utils/message_popup";
+import "@/utils/token_util"
+import token_util from "@/utils/token_util";
 
 interface PersonInfo {
     id: string
@@ -16,6 +16,11 @@ interface CodeInfo<T> {
     data : T
 }
 
+interface LoginResponseData {
+    user_id: number
+    token: string,
+}
+
 let person: PersonInfo = reactive(
     {
         id: "",
@@ -23,55 +28,26 @@ let person: PersonInfo = reactive(
     }
 )
 
-let token: CodeInfo<string> = reactive(
-    {
-        code: "",
-        message: "",
-        data: ""
-    }
-)
-
-interface Props {
-  modelValue?: string;
-  ids?: Number;
-}
-let props = withDefaults(defineProps<Props>(), {
-  modelValue: "", // v-model绑定的属性值
-  ids: undefined
-});
-
 // 传递的方法
 const emit = defineEmits<{
-  (e: "update:modelValue", visible: string): string;
-  (e: "update:ids", visible: Number): Number;
 }>();
 
 function event_login_click(){
-
-
-    let person_data = {
+    let person_data: PersonInfo = {
         id: person.id,
         password: person.password
     }
 
-    let token_data = {
-        code: token.code,
-        message: token.message,
-        data: token.data
-    }
-
-    const route = useRouter();
     api.post("/login", person_data).then(response => {
         let data = response.data;
         if (data.code != 0){
             popup_message("登录失败: " + data.message, "error")
         } else {
-            let token: string = response.data.data.token;
-            let user_id: Number = response.data.data.user_id;
-            console.log(token);
+            let info: CodeInfo<LoginResponseData> = response.data;
+            
+            token_util.set_token(info.data.token)
+
             popup_message("登录成功", "success");
-            emit("update:ids", user_id);
-            emit("update:modelValue", token);
         }
     }).catch(error => {
         popup_message("登录失败: " + error.message, "error")
@@ -196,7 +172,3 @@ body {
     background-color: rgba(255, 34, 56, 0.4);
 }
 </style>
-
-function msg(arg0: string, msg: any) {
-  throw new Error("Function not implemented.");
-}

@@ -1,4 +1,36 @@
+<template>
 
+    <div class="header">
+
+        <ul style="list-style-type:none">
+            <div>
+                <li><a @click=event_jumpto_home>首页</a></li>
+            </div>
+            <div>
+                <li><a href="#">我的主页</a></li>
+            </div>
+            <div>
+                <li><a @click=event_jumpto_BlogSend>发布</a></li>
+            </div>
+            <div>
+                <li><a @click=event_jumpto_register>注册</a></li>
+            </div>
+            <div>
+                <li><a @click=event_jumpto_login>登录</a></li>
+            </div>
+
+
+        </ul>
+
+
+    </div>
+
+    <Register v-show="registervisible" v-model:ids="idsend"></Register>
+    <Login v-show="loginvisible" v-model="tokensend" v-model:ids="idsend"></Login>
+    <BlogSend v-show="sendvisible" v-model:ids="idsend" v-model:modelValue="tokensend"></BlogSend>
+
+
+</template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
@@ -13,9 +45,9 @@ const route1 = useRoute();
 
 
 interface CodeInfo<T> {
-    code:string
+    code: string
     message: string
-    data : T
+    data: T
 }
 
 interface sendmsg {
@@ -45,96 +77,57 @@ let idsend = ref<Number>(0);
 
 function event_jumpto_home() {
     //跳转页面
-    route.push({path:'/'})
+    route.push({ path: '/' })
 }
 
 function event_jumpto_register() {
-  registervisible.value = true;
-  loginvisible.value = false;
-  sendvisible.value = false;
+    registervisible.value = true;
+    loginvisible.value = false;
+    sendvisible.value = false;
 }
 
 function event_jumpto_BlogSend() {
-  registervisible.value = false;
-  loginvisible.value = false;
-  sendvisible.value = true;
+    registervisible.value = false;
+    loginvisible.value = false;
+    sendvisible.value = true;
 }
 
 function event_jumpto_login() {
-  registervisible.value = false;
-  loginvisible.value = true;
-  sendvisible.value = false;
+    registervisible.value = false;
+    loginvisible.value = true;
+    sendvisible.value = false;
 }
-
-
-
-
-
 
 </script>
 
-<template>
-
-
-
-  <div class="header">
-    
-    <ul style="list-style-type:none">
-      <div>
-      <li><a @click=event_jumpto_home>首页</a></li>
-      </div>
-      <div>
-      <li><a href="#">我的主页</a></li>
-    </div>
-      <div>
-        <li><a @click=event_jumpto_BlogSend>发布</a></li>
-      </div>
-      <div>
-        <li><a @click=event_jumpto_register>注册</a></li>
-      </div>
-      <div>
-        <li><a @click=event_jumpto_login>登录</a></li>
-      </div>
-
-
-    </ul>
-
-
-  </div>
-
-  <Register v-show="registervisible" v-model:ids="idsend"></Register>
-  <Login v-show="loginvisible" v-model="tokensend" v-model:ids="idsend"></Login>
-  <BlogSend v-show="sendvisible" v-model:ids="idsend" v-model:modelValue="tokensend"></BlogSend>
-
-
-</template>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
- .header{
-   background: #ffd500;
-   height: 50px;
- }
+.header {
+    background: #ffd500;
+    height: 50px;
+}
 
- ul{  
+ul {
 
-  display: inline;
+    display: inline;
 
 
- }
- li{
+}
 
-    float:right;
+li {
+
+    float: right;
     width: 100px;
     margin-right: 50px;
     margin-top: 10px;
 
- }
- a{
+}
+
+a {
     text-decoration: none;
 
     color: rgb(1, 15, 18);
     font-size: 20px;
     text-shadow: none;
- }
+}
 </style>

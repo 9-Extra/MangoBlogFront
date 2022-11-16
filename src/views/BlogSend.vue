@@ -38,15 +38,8 @@ function event_blog_send(){
         description: blog.description,
         content: blog.content
     }
-
     
-    
-    api.post("/post", blog_data,{
-        headers: {
-           "authorization":props.modelValue  //token换成从缓存获取
-        }
-      })
-    .then(response => {
+    api.post("/post", blog_data).then(response => {
         popup_message("发布成功", "success")
     }).catch(error => {
         popup_message("发布失败: " + error.message, "error")
