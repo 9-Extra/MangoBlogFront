@@ -2,11 +2,14 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
+    "noImplicitAny": false, // 防止对象隐式具有'任何'类型
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
+      
     }
   },
+
 
   "references": [
     {

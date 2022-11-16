@@ -51,13 +51,6 @@ export default {
 <style scoped>
 @charset "utf-8";
 .xtx-message {
-    width: 300px;
-    height: 50px;
-    position: fixed;
-    z-index: 9999;
-    left: 50%;
-    margin-left: -150px;
-    top: 15vh;
     line-height: 50px;
     padding: 0 25px;
     border: 1px solid #e4e4e4;
