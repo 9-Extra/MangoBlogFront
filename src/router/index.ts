@@ -17,7 +17,7 @@ const Page = () => import("../views/Page.vue");
 //    name: "Home",
 //    component: () => import("../views/Home.vue")
 //  },
- 
+
  
 const routes = [
   {
@@ -45,6 +45,11 @@ const routes = [
     path: "/Login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/Page",
+    name: "Page",
+    component: Page,
   },
   {
     path: "/:pathMatch(.*)*", // 代替vue2的通配符path: "*",
