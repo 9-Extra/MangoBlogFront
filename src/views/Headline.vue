@@ -1,20 +1,6 @@
 
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref, reactive } from "vue"
-import { useRoute } from 'vue-router'
-const router = useRouter();
-const route = useRoute();
-
-
-
-
-interface CodeInfo<T> {
-    code:string
-    message: string
-    data : T
-}
 </script>
 
 <template>

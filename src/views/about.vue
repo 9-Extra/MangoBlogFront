@@ -8,7 +8,7 @@ import { useRoute, useRouter } from "vue-router";
  
 export default defineComponent({
 	name: "About",
-	setup(props) {
+	setup() {
         // useRoute 相当于vue2的this.$route。用于获取页面传递的参数
 		const route = useRoute();
 		let { id } = route.query;

@@ -10,20 +10,6 @@ interface PersonInfo {
     password: string
 }
 
-interface CodeInfo<T> {
-    code:string
-    message: string
-    data : T
-}
-
-let personid: CodeInfo<string> = reactive(
-    {
-        code: "",
-        message: "",
-        data: ""
-    }
-)
-
 let person: PersonInfo = reactive(
     {
         nick_name: "",
@@ -31,16 +17,6 @@ let person: PersonInfo = reactive(
         password: ""
     }
 )
-
-interface Props {
-  ids?:Number;
-}
-let props = withDefaults(defineProps<Props>(), {
-  ids:undefined
-});
-const emit = defineEmits<{
-  (e: "update:ids", visible: Number): Number;
-}>();
 
 
 const router = useRouter();
@@ -73,17 +49,12 @@ function event_register_click() {
             popup_message("注册失败: " + data.message, "error")
         } else {
             popup_message("注册成功 id:" + data.data, "success")
-            emit("update:ids", data.data);
             router.push('/Login')
         }
 
     }).catch(error => {
         popup_message("提交失败: " + error.message, "error")
     })
-
-
-
-
 }
 
 

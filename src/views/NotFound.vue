@@ -13,7 +13,7 @@ import { useRouter } from 'vue-router'
  
 export default defineComponent({
 	name: "Home",
-	setup(props) {
+	setup() {
         // useRouter相当于vue2的this.$router
         const router = useRouter();
  

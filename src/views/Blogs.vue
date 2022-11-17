@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { ref, reactive , watch } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
