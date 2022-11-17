@@ -1,9 +1,8 @@
 <template>
-	<div>
+	<div id="main">
 		<router-link to='/'> Home</router-link>
 		<button @click="toAbout(1)">toAbout</button>
 		<button @click="toAbout(2)">toAbout2</button>
- 
 	</div>
 </template>
  
@@ -20,7 +19,7 @@ export default defineComponent({
         // ts语法，要先声明参数类型，不然会报错
         const toAbout = (ids:number) => {
             router.push({
-                path:'/',
+                path:'/about',
                 query:{
                     id:ids
                 }
@@ -33,4 +32,10 @@ export default defineComponent({
 </script>
  
 <style scoped>
+#main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 </style>

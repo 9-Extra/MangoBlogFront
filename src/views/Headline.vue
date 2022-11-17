@@ -4,58 +4,53 @@
 </script>
 
 <template>
+    <div class="header">
 
+        <RouterLink to="/" active-class="active">首页</RouterLink>
+        <RouterLink to="/BlogSend" active-class="active">发布</RouterLink>
+        <RouterLink to="/Register" active-class="active">注册</RouterLink>
+        <RouterLink to="/Login" active-class="active">登录</RouterLink>
 
-
-  <div class="header">
-    
-    <ul style="list-style-type:none">
-      <div>
-      <li><RouterLink to="/">首页</RouterLink></li>
-      </div>
-      <div>
-        <li><RouterLink to="/BlogSend">发布</RouterLink></li>
-      </div>
-      <div>
-        <li><RouterLink to="/Register">注册</RouterLink></li>
-      </div>
-      <div>
-        <li><RouterLink to="/Login">登录</RouterLink></li>
-      </div>
-
-    </ul>
-
-
-  </div>
+    </div>
 
 </template>
 
 <style scoped>
- .header{
-   background: #ffd500;
-   height: 50px;
- }
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
 
- ul{  
+.header {
+    background: #ffd500;
+    height: 50px;
 
-  display: inline;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
 
-
- }
- li{
-
-    float:right;
-    width: 100px;
-    margin-right: 50px;
-    margin-top: 10px;
-
- }
- a{
+.header > a {
     text-decoration: none;
+
+    transition: 0.3s;
 
     color: rgb(1, 15, 18);
     font-size: 20px;
     text-shadow: none;
- }
+
+    margin: auto 30px;
+}
+
+.header > a:hover {
+    color: green;
+}
+
+
+.header > a.active {
+    color: green;
+    transition: 0s;
+}
 </style>
 
