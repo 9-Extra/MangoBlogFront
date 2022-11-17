@@ -4,6 +4,8 @@ import api from "@/utils/axios_blog";
 import popup_message from "@/utils/message_popup";
 import "@/utils/token_util"
 import token_util from "@/utils/token_util";
+import { useRouter } from 'vue-router'
+const router = useRouter();
 
 interface PersonInfo {
     id: string
@@ -48,9 +50,12 @@ function event_login_click(){
             token_util.set_token(info.data.token)
 
             popup_message("登录成功", "success");
+            router.push('/')
+            
         }
     }).catch(error => {
         popup_message("登录失败: " + error.message, "error")
+
     })
     
 

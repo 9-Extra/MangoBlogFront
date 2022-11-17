@@ -43,7 +43,7 @@ const emit = defineEmits<{
 }>();
 
 
-const route = useRouter();
+const router = useRouter();
 function event_register_click() {
 
 
@@ -74,6 +74,7 @@ function event_register_click() {
         } else {
             popup_message("注册成功 id:" + data.data, "success")
             emit("update:ids", data.data);
+            router.push('/Login')
         }
 
     }).catch(error => {
@@ -86,10 +87,7 @@ function event_register_click() {
 }
 
 
-function event_register_com() {
-    //跳转页面
-    route.push({path:'/'})
-}
+
 </script>
 
 <template>

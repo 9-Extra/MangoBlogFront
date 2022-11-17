@@ -10,7 +10,7 @@ const About = () => import("../views/about.vue");
 const NotFound = () => import("../views/NotFound.vue");
 const BlogSend = () => import("../views/BlogSend.vue");
 const Blogs = () => import("../views/Blogs.vue");
-
+const Page = () => import("../views/Page.vue");
 // 这里要注意一点，如下面这种写的话会报错，ts
 // {
 //    path: "/",
@@ -25,15 +25,11 @@ const routes = [
     name: "Register",
     component: Register,
   },
-  {
-    path: "/Blogs",
-    name: "Blogs",
-    component: Blogs,
-  },
+
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Blogs",
+    component: Blogs,
   },
   {
     path: "/BlogSend",

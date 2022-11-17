@@ -1,30 +1,36 @@
 <template>
 
 
-
 <body>
+  
+  
   <div class = "box">
   <h2>博客天地</h2>
 
 
     <div class="blogbox">
-       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in description">Blog{{descrebe.id}}:{{descrebe.description}}---------------作者:{{descrebe.authorid}}</ul>
-       <div>
-      <button @click=event_download>下载</button>
+
+       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in description">
+      <span>Blog{{descrebe.id}}:{{descrebe.description}}</span>
+      <span>作者:{{descrebe.authorid}}</span>
+        
+      </ul>
+       <div>   
     </div>
     </div>
     
   </div>
+  <Pageswitch v-model:modelValue="pagenum"></Pageswitch>
 </body>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref, reactive } from "vue"
-import { useRoute } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { ref, reactive , watch } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
-const route = useRouter();
+import Pageswitch from "@/views/Pageswitch.vue";
+let pagenum = ref(1);
 
 let description = reactive(
     [
@@ -61,9 +67,7 @@ let description = reactive(
   },])
 
 
-interface sendbid{
-  id:number
-}
+
 
 interface BlogInfo {
     id:number
@@ -98,22 +102,29 @@ let blogget:CodeInfo<BlogInfo>= reactive(
 function event_download(){
 
   for (let index = 1; index <= 6; index++) {
-    let sendbids: sendbid = {
-        id: index,
-    }
+    let realindex = ((pagenum.value - 1)*6) + index
 
-    api.get("/blog/?id="+index).then(response => {
+    api.get("/blog/?id="+realindex).then(response => {
         description[index-1].authorid = response.data.data.authorid
         description[index-1].id = response.data.data.id
         description[index-1].description = response.data.data.description
-        popup_message("get成功", "success")
+        popup_message("加载成功", "success")
     }).catch(error => {
-        popup_message("get失败: " + error.message, "error")
+        popup_message("加载失败: " + error.message, "error")
     })
     
   }
   
 }
+
+event_download();//进入页面即调用
+
+watch(() => pagenum.value, (newValue, oldValue) => {
+  event_download();
+})
+
+
+
 
 
 
@@ -153,7 +164,6 @@ body {
 
 .box > h2 {
     color: rgb(225, 221, 212);
-    margin-bottom: 10px;
     font-size: 60px;
 }
 
@@ -166,13 +176,19 @@ body {
 }
 
 .blogbox > ul {
-    float: top;
+    
     margin-top: 40px;
-
     margin-right: 10px;
     font-size: 40px;
     color: rgba(213, 201, 201, 0.9);
 
+}
+
+span{
+position:relative;
+
+margin: 10px;
+  
 }
 
 .box > button{
@@ -185,5 +201,7 @@ body {
     color: rgba(0,0,0,0.7);
     transition: 1s;
 }
+
+
 
 </style>

@@ -4,8 +4,10 @@
 import { useRouter } from 'vue-router'
 import { ref, reactive } from "vue"
 import { useRoute } from 'vue-router'
-const route = useRouter();
-const route1 = useRoute();
+const router = useRouter();
+const route = useRoute();
+
+
 
 
 interface CodeInfo<T> {
@@ -34,6 +36,7 @@ interface CodeInfo<T> {
       <div>
         <li><RouterLink to="/Login">登录</RouterLink></li>
       </div>
+
     </ul>
 
 
