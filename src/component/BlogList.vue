@@ -2,7 +2,7 @@
 import 'mavon-editor/dist/css/index.css'
 import { ref, reactive, type Ref } from "vue"
 import api from "@/utils/axios_blog";
-import user_util from "@/utils/user_util";
+import {get_user_information} from "@/utils/user_util";
 import popup_message from "@/utils/message_popup";
 
 interface Blog {
@@ -14,7 +14,7 @@ interface Blog {
 
 let blog_list: Ref<Blog[]> = ref([])
 
-user_util.get_user_information().then(
+get_user_information().then(
     user => {
         if (user != null) {
             api.get("/open/blogs/?id=" + user.id).then(response => {
