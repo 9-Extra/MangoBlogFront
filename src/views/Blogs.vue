@@ -10,9 +10,9 @@
 
     <div class="blogbox">
 
-       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in description">
+       <ul style="margin-left:15px; line-height:40px;" v-for="descrebe in descriptions">
       <span>Blog{{descrebe.id}}:{{descrebe.description}}</span>
-      <span>作者:{{descrebe.authorid}}</span>
+      <span @click="blog_detail(descrebe.authorid)">作者:{{descrebe.authorid}}</span>
         
       </ul>
        <div>   
@@ -30,9 +30,12 @@ import { ref, reactive , watch } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import Pageswitch from "@/views/Pageswitch.vue";
+
 let pagenum = ref(1);
 
-let description = reactive(
+
+
+let descriptions = reactive(
     [
 
   {
@@ -96,7 +99,13 @@ let blogget:CodeInfo<BlogInfo>= reactive(
       }
     }
 )
+const router = useRouter();
+let paths = ref(router.currentRoute.value.path)
+let myid = ref(paths.value.split("/",3)[2])
 
+function blog_detail(auid:number){
+  router.push({name:"Page",params:{id:myid.value,auid:auid}})
+}
 
 
 function event_download(){
@@ -104,10 +113,10 @@ function event_download(){
   for (let index = 1; index <= 6; index++) {
     let realindex = ((pagenum.value - 1)*6) + index
 
-    api.get("/blog/?id="+realindex).then(response => {
-        description[index-1].authorid = response.data.data.authorid
-        description[index-1].id = response.data.data.id
-        description[index-1].description = response.data.data.description
+    api.get("/privite/blog/?id="+realindex).then(response => {
+        descriptions[index-1].authorid = response.data.data.authorid
+        descriptions[index-1].id = response.data.data.id
+        descriptions[index-1].description = response.data.data.description
         popup_message("加载成功", "success")
     }).catch(error => {
         popup_message("加载失败: " + error.message, "error")
@@ -150,8 +159,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 1200px;
-    height: 600px;
+    width: 80vw;
+    height: 80vh;
 
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -160,6 +169,10 @@ body {
     border-radius: 10px;
 
     backdrop-filter: blur(10px);
+    
+    overflow: hidden;
+    overflow-y: scroll; 
+
 } 
 
 .box > h2 {
@@ -177,7 +190,7 @@ body {
 
 .blogbox > ul {
     
-    margin-top: 40px;
+    margin-top: 20px;
     margin-right: 10px;
     font-size: 40px;
     color: rgba(213, 201, 201, 0.9);

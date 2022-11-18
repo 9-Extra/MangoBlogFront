@@ -11,9 +11,9 @@ const route = useRoute();
 
 
 interface CodeInfo<T> {
-    code:string
-    message: string
-    data : T
+  code: string
+  message: string
+  data: T
 }
 </script>
 
@@ -22,19 +22,27 @@ interface CodeInfo<T> {
 
 
   <div class="header">
-    
+
     <ul style="list-style-type:none">
       <div>
-      <li><RouterLink to="/">首页</RouterLink></li>
+        <li>
+          <RouterLink to="/Blogs/0">首页</RouterLink>
+        </li>
       </div>
       <div>
-        <li><RouterLink to="/BlogSend">发布</RouterLink></li>
+        <li>
+          <RouterLink to="/BlogSend">发布</RouterLink>
+        </li>
       </div>
       <div>
-        <li><RouterLink to="/Register">注册</RouterLink></li>
+        <li>
+          <RouterLink to="/Register">注册</RouterLink>
+        </li>
       </div>
       <div>
-        <li><RouterLink to="/Login">登录</RouterLink></li>
+        <li>
+          <RouterLink to="/Login">登录</RouterLink>
+        </li>
       </div>
 
     </ul>
@@ -45,31 +53,33 @@ interface CodeInfo<T> {
 </template>
 
 <style scoped>
- .header{
-   background: #ffd500;
-   height: 50px;
- }
+.header {
+  background: #ffd500;
+  height: 50px;
+}
 
- ul{  
+ul {
 
   display: inline;
 
 
- }
- li{
+}
 
-    float:right;
-    width: 100px;
-    margin-right: 50px;
-    margin-top: 10px;
+li {
 
- }
- a{
-    text-decoration: none;
+  float: right;
+  width: 100px;
+  margin-right: 50px;
+  margin-top: 10px;
 
-    color: rgb(1, 15, 18);
-    font-size: 20px;
-    text-shadow: none;
- }
+}
+
+a {
+  text-decoration: none;
+
+  color: rgb(1, 15, 18);
+  font-size: 20px;
+  text-shadow: none;
+}
 </style>
 

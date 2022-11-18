@@ -41,7 +41,7 @@ function popup_message(text: String, type: String) {
     clearTimeout(timer)
     timer = setTimeout(() => {
         div.removeChild(content)
-    }, 3000)
+    }, 8000)
 }
 
 export default popup_message;

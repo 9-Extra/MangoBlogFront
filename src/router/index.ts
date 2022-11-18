@@ -25,9 +25,8 @@ const routes = [
     name: "Register",
     component: Register,
   },
-
   {
-    path: "/",
+    path: "/Blogs/:id",
     name: "Blogs",
     component: Blogs,
   },
@@ -46,16 +45,13 @@ const routes = [
     name: "Login",
     component: Login,
   },
+
   {
-    path: "/Page",
+    path: "/Page/:id/:auid",
     name: "Page",
     component: Page,
   },
-  {
-    path: "/:pathMatch(.*)*", // 代替vue2的通配符path: "*",
-    name: "NotFound",
-    component: NotFound,
-  },
+
 ];
  
 const router = createRouter({

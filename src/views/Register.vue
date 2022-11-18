@@ -3,6 +3,7 @@ import { ref, reactive } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import { useRouter } from 'vue-router'
+import token_util from "@/utils/token_util";
 
 interface PersonInfo {
     nick_name: string
@@ -16,13 +17,15 @@ interface CodeInfo<T> {
     data : T
 }
 
-let personid: CodeInfo<string> = reactive(
-    {
-        code: "",
-        message: "",
-        data: ""
-    }
-)
+interface LoginResponseData {
+    user_id: number
+    token: string,
+}
+
+interface PersonInfoL {
+    id: string
+    password: string
+}
 
 let person: PersonInfo = reactive(
     {
@@ -32,15 +35,12 @@ let person: PersonInfo = reactive(
     }
 )
 
-interface Props {
-  ids?:Number;
-}
-let props = withDefaults(defineProps<Props>(), {
-  ids:undefined
-});
-const emit = defineEmits<{
-  (e: "update:ids", visible: Number): Number;
-}>();
+let personL: PersonInfoL = reactive(
+    {
+        id: "",
+        password: ""
+    }
+)
 
 
 const router = useRouter();
@@ -67,18 +67,43 @@ function event_register_click() {
         password: person.password
     }
 
+    let person_dataL = {
+        id: personL.id,
+        password: person.password
+    }
+
+    
+
     api.post("/register", person_data).then(response => {
         let data = response.data;
         if (data.code != 0){
             popup_message("注册失败: " + data.message, "error")
         } else {
             popup_message("注册成功 id:" + data.data, "success")
-            emit("update:ids", data.data);
-            router.push('/Login')
+            popup_message("正在登录", "success")
+            person_dataL.id = data.data
+
+        api.post("/login", person_dataL).then(response => {
+        let data = response.data;
+        if (data.code != 0){
+            popup_message("登录失败: " + data.message, "error")
+        } else {
+            let info: CodeInfo<LoginResponseData> = response.data;
+            
+            token_util.set_token(info.data.token)
+
+            popup_message("登录成功", "success");
+            router.push({name:"Blogs",params:{id:person_dataL.id}})
+            
+        }
+        }).catch(error => {
+            popup_message("登录失败: " + error.message, "error")
+
+        })
         }
 
     }).catch(error => {
-        popup_message("提交失败: " + error.message, "error")
+        popup_message("注册失败: " + error.message, "error")
     })
 
 
