@@ -9,7 +9,7 @@ let baseURL: string
 if(reg.test(host)) {
     baseURL = 'http://192.168.1.100:8080';
 } else {
-    baseURL = protocol + "//" + host + ":8080";
+    baseURL = 'http://192.168.1.100:8080';//protocol + "//" + host + ":8080";
 }
 
 console.log(baseURL)
@@ -30,7 +30,7 @@ api.interceptors.request.use(
         let token = token_util.get_token()
         if (token){
             if (config.headers){
-                config.headers.authentication = token
+                config.headers.authorization = token
             }
         }
         return config;

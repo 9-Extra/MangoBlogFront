@@ -15,8 +15,8 @@ function event_post_click(){
 
 <template>
     <div id="main">
-        <editor.mavonEditor v-model="editor_text"/>
         <button @click=event_post_click>登录</button>
+        <editor.mavonEditor v-model="editor_text"/>
     </div>
 </template>
 
@@ -24,7 +24,7 @@ function event_post_click(){
 @charset "utf-8";
 
 #main {
-    height: 100vh;
+    height: 90vh;
 }
 
 </style>

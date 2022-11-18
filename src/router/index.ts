@@ -11,6 +11,7 @@ const NotFound = () => import("../views/NotFound.vue");
 const BlogSend = () => import("../views/BlogSend.vue");
 const Blogs = () => import("../views/Blogs.vue");
 const Page = () => import("../views/Page.vue");
+const MySpace = () => import("../views/MySpace.vue");
 // 这里要注意一点，如下面这种写的话会报错，ts
 // {
 //    path: "/",
@@ -51,6 +52,13 @@ const routes = [
     name: "Page",
     component: Page,
   },
+
+  {
+    path: "/Me",
+    name: "MySpace",
+    component: MySpace,
+  },
+
 
 ];
  

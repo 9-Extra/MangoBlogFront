@@ -18,11 +18,6 @@ interface CodeInfo<T> {
     data : T
 }
 
-interface LoginResponseData {
-    user_id: number
-    token: string,
-}
-
 let person: PersonInfo = reactive(
     {
         id: "",
@@ -45,12 +40,12 @@ function event_login_click(){
         if (data.code != 0){
             popup_message("登录失败: " + data.message, "error")
         } else {
-            let info: CodeInfo<LoginResponseData> = response.data;
+            let info: CodeInfo<string> = response.data;
             
-            token_util.set_token(info.data.token)
+            token_util.set_token(info.data)
 
             popup_message("登录成功", "success");
-            router.push({name:"Blogs",params:{id:person_data.id}})
+            //router.push({name:"Blogs",params:{id:person_data.id}})
             
         }
     }).catch(error => {

@@ -27,6 +27,11 @@
                     <a :href="href" @click="navigate">登录</a>
                 </li>
             </router-link>
+            <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">个人主页</a>
+                </li>
+            </router-link>
         </ul>
     </div>
 

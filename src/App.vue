@@ -3,9 +3,7 @@ import Headline from "@/views/Headline.vue";
 </script>
 
 <template>
-    <div>
-        <Headline/>
-    </div>
+    <Headline/>
     <router-view></router-view>
 </template>
 
