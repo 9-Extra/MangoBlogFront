@@ -85,10 +85,11 @@ import { ref, reactive, type Ref } from "vue"
 }
 
 .header>ul>li>a {
+    display: block;
     text-decoration: none;
 
     color: rgb(1, 15, 18);
-    font-size: 1.2vw;
+    font-size: 2vh;
     text-shadow: none;
 
     margin: auto 30px;

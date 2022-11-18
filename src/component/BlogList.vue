@@ -2,7 +2,7 @@
 import 'mavon-editor/dist/css/index.css'
 import { ref, reactive, type Ref } from "vue"
 import api from "@/utils/axios_blog";
-import { get_user_information } from "@/utils/user_util";
+import {get_user_information} from "@/utils/user_util";
 import popup_message from "@/utils/message_popup";
 
 interface Blog {
