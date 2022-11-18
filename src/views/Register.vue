@@ -117,16 +117,16 @@ function event_register_click() {
             <h2>注册</h2>
             <div>
                 <div class="input-box">
-                    <label>昵称</label>
+                    <label>昵称:</label>
                     <input class="" type="text" placeholder="昵称" v-model=person.nick_name />
                 </div>
                 <div class="input-box">
-                    <label>年龄</label>
+                    <label>年龄:</label>
                     <input class="" type="text" placeholder="年龄" v-model=person.age />
                 </div>
                 <div class="input-box">
-                    <label>密码</label>
-                    <input class="" type="text" v-model=person.password />
+                    <label>密码:</label>
+                    <input class="" type="text" placeholder="密码" v-model=person.password />
                 </div>
                 </div>
                     <button @click=event_register_click>注册</button>
@@ -162,8 +162,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 500px;
-    height: 400px;
+    width: 60vw;
+    height: 70vh;
 
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -177,9 +177,11 @@ body {
 .box > h2 {
     color: rgba(0, 0, 0, 0.7);
     margin-bottom: 10px;
-    font-size: 40px;
+    font-size: 2.5vw;
 }
 .input-box {
+    width: 50vw;
+    height: 10vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -190,13 +192,13 @@ body {
 
 .input-box > label {
     margin-right: 10px;
-    color: rgba(241, 233, 233, 0.9);
-    font-size: 15px;
+    color: rgba(88, 47, 0, 0.9);
+    font-size: 2vw;
 }
 
 .input-box > input {
     color: rgba(0, 0, 0, 0.9);
-    font-size: 15px;
+    font-size: 2vw;
     height: 1.5em;
     width: 12em;
     opacity: 0.5;
@@ -214,13 +216,14 @@ body {
 
 .box > button{
     margin: 10px;
-    width: 130px;
-    height: 40px;
+    width: 15vw;
+    height: 8vh;
     border-radius: 20px;
     border: 1px solid rgba(56, 20, 15, 0.5);
     background-color: rgba(251, 189, 5, 0.856);
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
+    font-size: 1.5vw;
 }
 
 .box > button:hover {

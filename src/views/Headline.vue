@@ -48,7 +48,7 @@
     position: fixed;
     width: 100vw;
     background: #ffd500;
-    height: 50px;
+    height: 5vh;
 }
 
 .header>ul {
@@ -58,23 +58,23 @@
 
 .header>ul>li {
     float: right;
-    height: 50px;
+    height: 5vh;
 
     transition: 0.3s;
 
-    padding-top: 10px;
+    padding-top: 1vh;
     border-radius: 0px;
 
 }
 
 .header>ul>li.active{
     transition: 0s;
-    border-radius: 10px;
+    border-radius: 1vh;
     background-color: blue;
 }
 
 .header>ul>li:hover {
-    border-radius: 10px;
+    border-radius: 1vh;
     background-color: blue;
 }
 
@@ -82,7 +82,7 @@
     text-decoration: none;
 
     color: rgb(1, 15, 18);
-    font-size: 20px;
+    font-size: 1.2vw;
     text-shadow: none;
 
     margin: auto 30px;
