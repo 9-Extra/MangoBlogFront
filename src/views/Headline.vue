@@ -1,16 +1,33 @@
 
 
 <script setup lang="ts">
+
 </script>
 
 <template>
     <div class="header">
-
-        <RouterLink to="/" active-class="active">首页</RouterLink>
-        <RouterLink to="/BlogSend" active-class="active">发布</RouterLink>
-        <RouterLink to="/Register" active-class="active">注册</RouterLink>
-        <RouterLink to="/Login" active-class="active">登录</RouterLink>
-
+        <ul>
+            <router-link to="/" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">首页</a>
+                </li>
+            </router-link>
+            <router-link to="/BlogSend" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">发布</a>
+                </li>
+            </router-link>
+            <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">注册</a>
+                </li>
+            </router-link>
+            <router-link to="/Login" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">登录</a>
+                </li>
+            </router-link>
+        </ul>
     </div>
 
 </template>
@@ -23,18 +40,41 @@
 }
 
 .header {
+    position: fixed;
+    width: 100vw;
     background: #ffd500;
     height: 50px;
-
-    display: flex;
-    justify-content: end;
-    align-items: center;
 }
 
-.header > a {
-    text-decoration: none;
+.header>ul {
+    display: inline;
+    list-style: none;
+}
+
+.header>ul>li {
+    float: right;
+    height: 50px;
 
     transition: 0.3s;
+
+    padding-top: 10px;
+    border-radius: 0px;
+
+}
+
+.header>ul>li.active{
+    transition: 0s;
+    border-radius: 10px;
+    background-color: blue;
+}
+
+.header>ul>li:hover {
+    border-radius: 10px;
+    background-color: blue;
+}
+
+.header>ul>li>a {
+    text-decoration: none;
 
     color: rgb(1, 15, 18);
     font-size: 20px;
@@ -43,14 +83,12 @@
     margin: auto 30px;
 }
 
-.header > a:hover {
-    color: green;
+.header>ul>li.active>a {
+    color: white;
 }
 
-
-.header > a.active {
-    color: green;
-    transition: 0s;
+.header>ul>li:hover>a {
+    color: white;
 }
 </style>
 

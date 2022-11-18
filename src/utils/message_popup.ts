@@ -30,18 +30,29 @@ function popup_message(text: String, type: String) {
     // 实现：根据xtx-message.vue渲染消息提示
     // 1. 导入组件
     // 2. 根据组件创建虚拟节点
+    console.log("!!!!!!!!!!!!!!!!!!!")
+
     const vnode = createVNode(MessagePopupVue, { type, text})
     // 3. 准备一个DOM容器
     // 4. 把虚拟节点渲染挂载到DOM容器中
     const content = document.createElement('div')
     div.appendChild(content)
+    if (div.childNodes.length > 3){
+        if (div.firstChild){
+            div.removeChild(div.firstChild)
+        }
+    }
+
     render(vnode, content)
     // 5. 开启定时，移出DOM容器内容
-    let timer = 0
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-        div.removeChild(content)
+    setTimeout(() => {
+        try {
+            div.removeChild(content)   
+        } catch (error) {
+            //ignore
+        }
     }, 3000)
+    
 }
 
 export default popup_message;

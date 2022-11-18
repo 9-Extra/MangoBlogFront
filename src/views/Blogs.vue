@@ -149,8 +149,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 1200px;
-    height: 600px;
+    width: 50vw;
+    height: 50vh;
 
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
