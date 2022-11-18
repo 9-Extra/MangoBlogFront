@@ -12,8 +12,20 @@ interface Blog {
     content: string
 }
 
+interface idandaid {
+    blog_id: number
+    operation: string
+}
+
 let blog_list: Ref<Blog[]> = ref([])
 
+let postid:idandaid = reactive({
+    blog_id: 0,
+    operation: "delete"
+})
+
+
+function flash(){
 get_user_information().then(
     user => {
         if (user != null) {
@@ -26,10 +38,24 @@ get_user_information().then(
         }
     }
 );
+}
+
+flash();
 
 function blog_detail(id) {
 
 
+
+}
+
+function event_deleteblog(bid){
+    postid.blog_id = bid;
+    api.post("/post",postid).then(response => {
+        if(response.data.code != 200)popup_message("删除失败: " + response.data.message, "error")
+        else flash();
+    }).catch(error => {
+        popup_message("加载失败: " + error.message, "error")
+    })
 
 }
 
@@ -46,7 +72,9 @@ function blog_detail(id) {
             <tr v-for=" blog in blog_list">
                 <td class="ids">{{ blog.id }}</td>
                 <td class="ids" @click="blog_detail(blog.authorid)">{{ blog.authorid }}</td>
-                <td class="description">{{ blog.description }}</td>
+                <td class="description">{{ blog.description }}
+                <button class="delete" @click="event_deleteblog(blog.id)">删除</button>
+                </td>
             </tr>
         </table>
     </div>
@@ -124,6 +152,19 @@ height: 5vh;
 border-style: solid;
 border-color: #999999;
 font-size: 2vw;
+}
+
+.delete{
+    float:right;
+    margin: 10px;
+    width: 5vw;
+    height: 4vh;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 1.5vh;
 }
 </style>
   
