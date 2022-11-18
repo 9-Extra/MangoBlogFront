@@ -1,5 +1,7 @@
 import api from "./axios_blog";
 import popup_message from "./message_popup";
+import { upload_flie } from "./file_util";
+import type { Ref } from "vue";
 
 interface User{
     id: number
@@ -8,7 +10,7 @@ interface User{
     status: string //权限
 }
 
-async function get_user_information(): Promise<User | null> {
+export async function get_user_information(): Promise<User | null> {
     return api.post("/me").then(response => {
         if (response.data.code != 0){
             popup_message(response.data.message, "error");
@@ -30,6 +32,6 @@ async function get_user_information(): Promise<User | null> {
     })
 }
 
-export default {
-    get_user_information
+export function upload_head_image(file, progress?: Ref<number>){
+    return upload_flie(file, "/profile", progress)
 }
