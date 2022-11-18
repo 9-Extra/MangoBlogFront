@@ -15,7 +15,7 @@ function event_post_click(){
 
 <template>
     <div id="main">
-        <button @click=event_post_click>登录</button>
+        <button @click=event_post_click>上传</button>
         <editor.mavonEditor v-model="editor_text"/>
     </div>
 </template>
