@@ -2,6 +2,8 @@
 import editor from "mavon-editor"
 import 'mavon-editor/dist/css/index.css'
 import {ref} from "vue"
+import { upload_flie } from "@/utils/file_util";
+import popup_message from "@/utils/message_popup";
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
@@ -18,17 +20,29 @@ if (blog_id.value == null){
 }
 
 let editor_text = ref("")
+let upload_process = ref(0)
 
 function event_post_click(){
     console.log(editor_text.value)
-
-
+    let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
+    if (files && files.length > 0){
+        upload_flie(files[0], "/file/upload",upload_process).then().catch(
+            err => {
+                popup_message("文件上传失败", "error");
+            }
+        )
+    } else {
+        popup_message("文件无效", "error");
+    }
 }
+
+
 
 </script>
 
 <template>
     <div id="main">
+        <input class="style_file_content" accept="*" type="file" id="upload_file_id"/>
         <button @click=event_post_click>上传</button>
         <editor.mavonEditor v-model="editor_text"/>
     </div>
