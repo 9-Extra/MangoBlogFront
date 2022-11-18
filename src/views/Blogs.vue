@@ -125,12 +125,11 @@ let blogget:CodeInfo<BlogInfo>= reactive(
     }
 )
 const router = useRouter();
-let paths = ref(router.currentRoute.value.path)
-let myid = ref(paths.value.split("/",3)[2])
-
 function event_toaid(auid:number){
-  router.push({name:"Page",params:{id:myid.value,auid:auid}})
+  router.push({name:"Page",params:{auid:auid}})
 }
+
+
 
 
 function event_download(){
@@ -143,7 +142,7 @@ function event_download(){
         descriptions[index-1].authorid = response.data.data.authorid
         descriptions[index-1].id = response.data.data.id
         descriptions[index-1].description = response.data.data.description
-        if(response.data.code != 2) index--;
+        
     }).catch(error => {
         popup_message("加载失败: " + error.message, "error")
     })
