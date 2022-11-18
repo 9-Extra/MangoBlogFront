@@ -8,28 +8,28 @@
     <div class="header">
         <ul>
             <router-link to="/Blogs/0" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
-                    <a :href="href" @click="navigate">首页</a>
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <a :href="href">首页</a>
                 </li>
             </router-link>
             <router-link to="/BlogSend" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
-                    <a :href="href" @click="navigate">发布</a>
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <a :href="href">发布</a>
                 </li>
             </router-link>
             <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
-                    <a :href="href" @click="navigate">注册</a>
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <a :href="href">注册</a>
                 </li>
             </router-link>
             <router-link to="/Login" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
-                    <a :href="href" @click="navigate">登录</a>
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <a :href="href">登录</a>
                 </li>
             </router-link>
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
-                    <a :href="href" @click="navigate">个人主页</a>
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <a :href="href">个人主页</a>
                 </li>
             </router-link>
         </ul>

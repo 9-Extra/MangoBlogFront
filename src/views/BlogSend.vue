@@ -2,6 +2,7 @@
 import { ref, reactive } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
+import EditorVue from "@/component/Editor.vue";
 
 interface BlogInfo {
     author_id: string
@@ -46,7 +47,6 @@ function event_blog_send(){
 
 <template>
     <body>
-        
         <div class="input-box">
             <label>描述</label>
             <input class="" type="text" placeholder="请输入文本描述" v-model=blog.description />

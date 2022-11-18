@@ -21,22 +21,29 @@ if (blog_id.value == null){
 
 let editor_text = ref("")
 let upload_process = ref(0)
+let is_uploading = ref(false)
 
 function event_post_click(){
-    console.log(editor_text.value)
     let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
     if (files && files.length > 0){
-        upload_flie(files[0], "/file/upload",upload_process).then().catch(
+        is_uploading.value = true
+
+        upload_flie(files[0], "/file/upload?id=" + blog_id.value ,upload_process).then(
+            response => {
+                is_uploading.value = false
+            }
+        ).catch(
             err => {
                 popup_message("文件上传失败", "error");
+                is_uploading.value = false
             }
         )
+
     } else {
         popup_message("文件无效", "error");
     }
+
 }
-
-
 
 </script>
 
@@ -44,7 +51,10 @@ function event_post_click(){
     <div id="main">
         <input class="style_file_content" accept="*" type="file" id="upload_file_id"/>
         <button @click=event_post_click>上传</button>
+        <progress v-if=is_uploading :value=upload_process max=1.0></progress>
         <editor.mavonEditor v-model="editor_text"/>
+
+        <button @click=event_post_click>发布</button>
     </div>
 </template>
 
