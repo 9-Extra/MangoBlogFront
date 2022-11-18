@@ -1,85 +1,94 @@
 
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref, reactive } from "vue"
-import { useRoute } from 'vue-router'
-const router = useRouter();
-const route = useRoute();
 
-
-
-
-interface CodeInfo<T> {
-  code: string
-  message: string
-  data: T
-}
 </script>
 
 <template>
-
-
-
-  <div class="header">
-
-    <ul style="list-style-type:none">
-      <div>
-        <li>
-          <RouterLink to="/Blogs/0">首页</RouterLink>
-        </li>
-      </div>
-      <div>
-        <li>
-          <RouterLink to="/BlogSend">发布</RouterLink>
-        </li>
-      </div>
-      <div>
-        <li>
-          <RouterLink to="/Register">注册</RouterLink>
-        </li>
-      </div>
-      <div>
-        <li>
-          <RouterLink to="/Login">登录</RouterLink>
-        </li>
-      </div>
-
-    </ul>
-
-
-  </div>
+    <div class="header">
+        <ul>
+            <router-link to="/Blogs/0" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">首页</a>
+                </li>
+            </router-link>
+            <router-link to="/BlogSend" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">发布</a>
+                </li>
+            </router-link>
+            <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">注册</a>
+                </li>
+            </router-link>
+            <router-link to="/Login" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']">
+                    <a :href="href" @click="navigate">登录</a>
+                </li>
+            </router-link>
+        </ul>
+    </div>
 
 </template>
 
 <style scoped>
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
 .header {
-  background: #ffd500;
-  height: 50px;
+    position: fixed;
+    width: 100vw;
+    background: #ffd500;
+    height: 50px;
 }
 
-ul {
+.header>ul {
+    display: inline;
+    list-style: none;
+}
 
-  display: inline;
+.header>ul>li {
+    float: right;
+    height: 50px;
 
+    transition: 0.3s;
+
+    padding-top: 10px;
+    border-radius: 0px;
 
 }
 
-li {
-
-  float: right;
-  width: 100px;
-  margin-right: 50px;
-  margin-top: 10px;
-
+.header>ul>li.active{
+    transition: 0s;
+    border-radius: 10px;
+    background-color: blue;
 }
 
-a {
-  text-decoration: none;
+.header>ul>li:hover {
+    border-radius: 10px;
+    background-color: blue;
+}
 
-  color: rgb(1, 15, 18);
-  font-size: 20px;
-  text-shadow: none;
+.header>ul>li>a {
+    text-decoration: none;
+
+    color: rgb(1, 15, 18);
+    font-size: 20px;
+    text-shadow: none;
+
+    margin: auto 30px;
+}
+
+.header>ul>li.active>a {
+    color: white;
+}
+
+.header>ul>li:hover>a {
+    color: white;
 }
 </style>
 

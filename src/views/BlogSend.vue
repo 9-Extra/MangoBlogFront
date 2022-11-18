@@ -2,12 +2,6 @@
 import { ref, reactive } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
-import { useRouter } from 'vue-router'
-import { useRoute } from 'vue-router'
-import { parseStringStyle } from "@vue/shared";
-import Login from "./Login.vue";
-const route = useRouter();
-const route1 = useRoute();
 
 interface BlogInfo {
     author_id: string

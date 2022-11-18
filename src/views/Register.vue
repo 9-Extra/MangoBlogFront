@@ -105,10 +105,6 @@ function event_register_click() {
     }).catch(error => {
         popup_message("注册失败: " + error.message, "error")
     })
-
-
-
-
 }
 
 

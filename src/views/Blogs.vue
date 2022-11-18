@@ -161,6 +161,8 @@ body {
     align-items: center;
     width: 80vw;
     height: 80vh;
+    width: 50vw;
+    height: 50vh;
 
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
