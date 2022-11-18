@@ -4,6 +4,7 @@ import 'mavon-editor/dist/css/index.css'
 import {ref} from "vue"
 import { upload_flie } from "@/utils/file_util";
 import popup_message from "@/utils/message_popup";
+import { blog_operation, BLOG_OPERATION, type Blog, type CodeInfo} from "@/utils/utils"
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
@@ -14,16 +15,19 @@ function get_blog_id(): number | null {
     return id
 }
 
-let blog_id = ref(get_blog_id())
-if (blog_id.value == null){
+let id = get_blog_id()
+if (id == null){
+    popup_message("无效博客", "error")
     window.location.href = "/#/Me"//如果id错误就跳转回个人主页
 }
+
+let blog_id = ref(id as number)
 
 let editor_text = ref("")
 let upload_process = ref(0)
 let is_uploading = ref(false)
 
-function event_post_click(){
+function event_file_upload_click(){
     let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
     if (files && files.length > 0){
         is_uploading.value = true
@@ -45,12 +49,35 @@ function event_post_click(){
 
 }
 
+function event_post_click(){
+    let blog: Blog = {
+        id: blog_id.value,
+        authorid: 0,
+        status: 0,
+        description: "默认描述",
+        content: editor_text.value
+    }
+    blog_operation(blog_id.value, BLOG_OPERATION.SAVE, blog).then(
+        response => {
+            let result = response.data as CodeInfo<number>
+            if (result.code != 0){
+                popup_message("提交出错" + result.message, "error");
+            } else {
+                popup_message("提交成功", "success");
+            } 
+        }
+    ).catch(err => {
+        popup_message("提交出错", "error");
+    });
+
+}
+
 </script>
 
 <template>
     <div id="main">
         <input class="style_file_content" accept="*" type="file" id="upload_file_id"/>
-        <button @click=event_post_click>上传</button>
+        <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
         <editor.mavonEditor v-model="editor_text"/>
 

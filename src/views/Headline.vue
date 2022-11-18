@@ -1,13 +1,26 @@
 
 
 <script setup lang="ts">
-import { get_user_information } from "@/utils/user_util";
-import { ref, reactive, type Ref } from "vue"
+import router from '@/router';
+import popup_message from '@/utils/message_popup';
+import { get_user_information } from '@/utils/user_util';
+import {blog_operation, BLOG_OPERATION, type CodeInfo} from "@/utils/utils"
 
+async function event_post_click(){
+    let user = await get_user_information();
+    if (user != null){
+        let data = await (await blog_operation(0, BLOG_OPERATION.NEW, undefined)).data as CodeInfo<number>;
+        if (data.code != 0){
+            popup_message("粗错啦" + data.message, "error");
+            return;
+        } else {
+            window.open("/blog_editor.html?id=" + data.data);
+        }
+    } else {
+        router.push("/Login");
+    }
 
-
-
-
+}
 </script>
 
 <template>
@@ -18,11 +31,9 @@ import { ref, reactive, type Ref } from "vue"
                     <a :href="href">首页</a>
                 </li>
             </router-link>
-            <router-link to="/BlogSend" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
-                    <a :href="href">发布</a>
+                <li>
+                    <a @click="event_post_click">发布</a>
                 </li>
-            </router-link>
             <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
                     <a :href="href">注册</a>

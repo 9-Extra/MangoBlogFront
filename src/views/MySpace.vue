@@ -1,5 +1,22 @@
 <script setup lang="ts">
+import { get_user_information } from '@/utils/user_util';
+import token_util from "@/utils/token_util";
+import router from '@/router';
+import { reactive } from 'vue';
+import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
+
+if (!token_util.get_token()){
+    router.replace("/Login")
+}
+
+let user_rep = await get_user_information()
+if (user_rep != null){
+    let user = reactive(user_rep)
+    console.log(user_rep)
+} else {
+    router.replace("/Login")
+}
 
 </script>
 

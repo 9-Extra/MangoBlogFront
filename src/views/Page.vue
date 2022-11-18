@@ -62,9 +62,13 @@
     function getblog(){
         console.log(blogdatas)
         api.get("/open/blogs/?id="+auid.value).then(response => {
-            blogdatas.value = response.data.data
-            popup_message("加载成功", "success")
-            console.log(blogdatas)
+            if (response.data.code == 0){
+                blogdatas.value = response.data.data
+                popup_message("加载成功", "success")
+            } else {
+                blogdatas.value = []
+                popup_message("错误" + response.data.message, "error")
+            }
         }).catch(error => {
             popup_message("加载失败: " + error.message, "error")
         })
