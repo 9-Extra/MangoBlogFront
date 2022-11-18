@@ -23,17 +23,47 @@ export const enum BLOG_OPERATION {
 }
 interface BlogOperation{
     blog_id: number;
-    blog? : Blog;
+    status?: number;
+
+    description?: string;
+    content?: string;
+
     operation: string;
 }
 
-
-export function blog_operation(blog_id: number, operation: BLOG_OPERATION, blog? : Blog){
+//申请新的博客
+export function blog_new(){
     let op: BlogOperation = {
-        blog_id,
-        operation,
-        blog
+        blog_id: 0,
+        operation: BLOG_OPERATION.NEW
     }
 
     return api.post("/post", op);
+}
+
+//修改博客的状态
+export function blog_modify(blog_id: number, status: number){
+    let op: BlogOperation = {
+        blog_id,
+        status,
+        operation: BLOG_OPERATION.REVODE
+    }
+
+    return api.post("/post", op);
+}
+
+//修改博客的内容
+export function blog_edit(blog_id: number, description: string, content: string){
+    let op: BlogOperation = {
+        blog_id,
+        description,
+        content,
+        operation: BLOG_OPERATION.EDIT
+    }
+
+    return api.post("/post", op);
+}
+
+export function get_blog_content(blog_id: number){
+    return api.get("/private/blog?id=" + blog_id)
 }

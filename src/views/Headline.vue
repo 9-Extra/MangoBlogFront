@@ -4,12 +4,12 @@
 import router from '@/router';
 import popup_message from '@/utils/message_popup';
 import { get_user_information } from '@/utils/user_util';
-import {blog_operation, BLOG_OPERATION, type CodeInfo} from "@/utils/utils"
+import {blog_new, type CodeInfo} from "@/utils/utils"
 
 async function event_post_click(){
     let user = await get_user_information();
     if (user != null){
-        let data = await (await blog_operation(0, BLOG_OPERATION.NEW, undefined)).data as CodeInfo<number>;
+        let data = await (await blog_new()).data as CodeInfo<number>;
         if (data.code != 0){
             popup_message("粗错啦" + data.message, "error");
             return;
