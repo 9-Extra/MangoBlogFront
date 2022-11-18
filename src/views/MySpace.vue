@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '@/component/BlogList.vue';
+import BlogList from '@/component/BlogList.vue';
 
 </script>
 
