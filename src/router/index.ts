@@ -27,7 +27,7 @@ const routes = [
     component: Register,
   },
   {
-    path: "/Blogs/:id",
+    path: "/Blogs",
     name: "Blogs",
     component: Blogs,
   },
@@ -48,7 +48,7 @@ const routes = [
   },
 
   {
-    path: "/Page/:id/:auid",
+    path: "/Page/:auid",
     name: "Page",
     component: Page,
   },

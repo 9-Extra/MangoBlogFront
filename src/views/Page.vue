@@ -34,16 +34,22 @@
 </template>
     
     <script setup lang="ts">
+    import { get_user_information } from "@/utils/user_util";
     import { ref, reactive } from "vue"
     import api from "../utils/axios_blog";
     import { useRouter } from 'vue-router'
     import popup_message from "../utils/message_popup";
     const router = useRouter();
     let paths = ref(router.currentRoute.value.path)
-    let myid = ref(paths.value.split("/",4)[2])
-    let auid = ref(paths.value.split("/",4)[3])
-
-
+    let auid = ref(paths.value.split("/",3)[2])
+    let myid = ref("0")
+    get_user_information().then(
+    user => {
+        if (user != null) {
+            myid.value = user.id.toString();
+        }
+    }
+);
 
     let blogdatas = ref([{
         id:auid,

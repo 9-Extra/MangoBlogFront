@@ -1,13 +1,19 @@
 
 
 <script setup lang="ts">
+import { get_user_information } from "@/utils/user_util";
+import { ref, reactive, type Ref } from "vue"
+
+
+
+
 
 </script>
 
 <template>
     <div class="header">
         <ul>
-            <router-link to="/Blogs/0" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link to="/Blogs" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
                     <a :href="href">首页</a>
                 </li>

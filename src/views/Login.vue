@@ -45,7 +45,7 @@ function event_login_click(){
             token_util.set_token(info.data)
 
             popup_message("登录成功", "success");
-            //router.push({name:"Blogs",params:{id:person_data.id}})
+            router.push('/Blogs')
             
         }
     }).catch(error => {

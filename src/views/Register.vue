@@ -93,7 +93,7 @@ function event_register_click() {
             token_util.set_token(info.data.token)
 
             popup_message("登录成功", "success");
-            router.push({name:"Blogs",params:{id:person_dataL.id}})
+            router.push('/Blogs')
             
         }
         }).catch(error => {
