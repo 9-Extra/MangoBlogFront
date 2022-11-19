@@ -31,6 +31,9 @@ if (user_rep != null){
             <BlogList id="list_continer"></BlogList>
 
         </div>
+        <div class="buttonbox">
+            <button>退出登录</button>
+        </div>
     </body>
 </template>
 
@@ -113,5 +116,22 @@ h1 {
     height: 70%;
 
     margin-left: 40px;
+}
+
+.buttonbox > button{
+    margin: 10px;
+    width: 5vw;
+    height: 4vh;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 0.8vw;
+}
+
+.buttonbox > button:hover {
+    border: 1px solid rgba(255, 34, 56, 0.8);
+    background-color: rgba(255, 34, 56, 0.838);
 }
 </style>
