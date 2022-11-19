@@ -12,11 +12,16 @@ const BlogSend = () => import("../views/BlogSend.vue");
 const Blogs = () => import("../views/Blogs.vue");
 const Page = () => import("../views/Page.vue");
 const MySpace = () => import("../views/MySpace.vue");
-
+const Search = () => import("../views/Search.vue");
 const routes = [
     {
         path: "/",
         redirect: "/Me"
+    },
+    {
+        path: "/Search/:searchin",
+        name: "Search",
+        component: Search,
     },
     {
         path: "/Register",

@@ -4,7 +4,12 @@
 <body>
   <div class = "titlebox">
     <h2>博客天地</h2>
-
+    <select v-model="seris">
+    <option value="0">文章</option>
+    <option value="1">用户</option>
+  </select>
+          <input class="" type="text" placeholder="请输入搜索内容" v-model=searchcontent />
+          <button class="search" @click="event_search">搜索</button>
     </div> 
   
   <div class = "box">
@@ -42,8 +47,12 @@ import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import Pageswitch from "@/views/Pageswitch.vue";
 
+
+let seris = ref(0);//0代表搜文章 1 代表搜id
+
 let pagenum = ref(1);
 
+let searchcontent = ref("");
 
 
 let descriptions = reactive(
@@ -134,7 +143,7 @@ function event_toaid(auid:number|undefined){
 let availablenum = 0;
 let pagemax = 0;
 async function findav(){
-  for (let index = 1; index <= 500; index++) {
+  for (let index = 1; index <= 200; index++) {
 
   await api.get("/open/blog/?id="+index).then(response => {
     if(response.data.code == 0){
@@ -158,7 +167,7 @@ let realnum = 1;
 for(let i = 1; i<=pagenum.value;i++){
   if(i!=pagenum.value && i==1)popup_message("加载中,请稍后... " , "success")
 
-  for (let index = 1; index <= 500; index++) {
+  for (let index = 1; index <= 200; index++) {
 
     await api.get("/open/blog/?id="+realnum).then(response => {
         if(response.data.code == 0){
@@ -202,6 +211,11 @@ event_download();//进入页面即调用
 watch(() => pagenum.value, (newValue, oldValue) => {
   event_download();
 })
+
+function event_search(){
+  router.push({name:"Search",params:{searchin:searchcontent.value}})
+  
+}
 
 
 
@@ -248,31 +262,73 @@ watch(() => pagenum.value, (newValue, oldValue) => {
 
     .titlebox{
         display: flex;
-        flex-direction:column;
+        flex-direction:row;
         justify-content: center;
         align-items: center;
-        width: 30vw;
+        width: 80vw;
         height: 8vh;
         margin-top: 5vh;
 
-        background-color:rgb(250, 171, 34);
-    
-        border-top: 1px solid rgba(255, 255, 255, 0.5);
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-    
-        backdrop-filter: blur(10px);
 
 
     }
+
+    input {
+    margin-left: 1vw;
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 1vw;
+    height: 1.5em;
+    width: 12em;
+    opacity: 0.5;
+    border: 5px solid rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    transition: 1s;
+    outline: none;
+    padding: 0 10px;
+}
+
+  .search{
+          position:relative;
+
+          margin-left: 1vw;
+          width: 4vw;
+          height: 4vh;
+          border-radius: 20px;
+          border: 1px solid rgba(56, 20, 15, 0.5);
+          background-color: rgba(251, 189, 5, 0.856);
+          color: rgba(2, 2, 0, 0.7);
+          transition: 1s;
+          font-size: 0.8vw;
+          
+      }
+
+      select{
+        margin-left: 50vw;
+        width: 6vw;
+        height: 4vh;
+        border-radius: 20px;
+        border: 1px solid rgba(123, 2, 24, 0.5);
+        background-color: rgba(241, 120, 142, 0.4);
+        color: rgba(12, 14, 1, 0.7);
+        transition: 1s;
+        text-align: center;
+        font-size: 1vw;
+    }
+
+    button:hover {
+    border: 1px solid rgba(255, 34, 56, 0.8);
+    background-color: rgba(255, 34, 56, 0.838);
+    cursor: pointer;
+    }
     
     h2 {
-        position:relative;
-        bottom: 0.1vh;
+        position:absolute;
+        left: 45%;
+        top: 6%;
         color: rgb(8, 7, 4);
         font-size: 2.5vw;
+
+        
     }
 
     h1 {
@@ -316,6 +372,11 @@ watch(() => pagenum.value, (newValue, oldValue) => {
         color: rgba(0,0,0,0.7);
         transition: 1s;
     }
+
+
+
+
+
     
 table.imagetable {
     font-family: verdana, arial, sans-serif;

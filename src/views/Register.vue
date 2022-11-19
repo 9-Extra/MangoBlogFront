@@ -229,5 +229,6 @@ body {
 .box > button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
+    cursor: pointer;
 }
 </style>
