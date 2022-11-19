@@ -13,6 +13,7 @@
           <input class="" type="text" placeholder="请输入搜索内容" v-model=searchcontent />
           <button class="search" @click="event_search">搜索</button>
           <button class="owner" v-if="(previ == 2)" @click="to_prev2">管理员设置</button>
+          <button class="owner" v-if="(previ == 1)" @click="to_prev1">博客审核</button>
     </div> 
   
   <div class = "box">
@@ -242,11 +243,19 @@ async function prevget(){
     popup_message("网站拥有者,欢迎您" , "success")
     previ.value = 2;
   }
+  else if(user_rep?.privilege == "1"){
+    popup_message("管理员,欢迎您" , "success")
+    previ.value = 1;
+  }
 }
 prevget();
 
 function to_prev2(){
   router.push("/Prev2")
+}
+
+function to_prev1(){
+  router.push("/Prev1")
 }
 
 

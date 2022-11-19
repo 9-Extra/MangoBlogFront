@@ -14,7 +14,7 @@ const Page = () => import("../views/Page.vue");
 const MySpace = () => import("../views/MySpace.vue");
 const Search = () => import("../views/Search.vue");
 const Prev2 = () => import("../views/Prev2.vue");
-
+const Prev1 = () => import("../views/Prev1.vue");
 const routes = [
     {
         path: "/",
@@ -29,6 +29,11 @@ const routes = [
         path: "/Prev2",
         name: "Prev2",
         component: Prev2,
+    },
+    {
+        path: "/Prev1",
+        name: "Prev1",
+        component: Prev1,
     },
     {
         path: "/Register",
