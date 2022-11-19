@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import editor from "mavon-editor"
 import 'mavon-editor/dist/css/index.css'
-import {reactive, ref} from "vue"
+import { reactive, ref } from "vue"
 import { upload_flie } from "@/utils/file_util";
 import popup_message from "@/utils/message_popup";
-import { blog_edit, get_blog_content, type Blog, type CodeInfo} from "@/utils/utils"
+import { blog_edit, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
@@ -15,10 +15,10 @@ function get_blog_id(): number | null {
     return id
 }
 
-let id = get_blog_id()
-if (id == null){
-    popup_message("无效博客", "error")
-    window.location.href = "/#/Me"//如果id错误就跳转回个人主页
+let id: number | null = get_blog_id()
+if (id == null) {
+    //如果id不存在，认为是新建博客
+    id = (await blog_new()).data.data;
 }
 
 let blog: Blog = reactive({
@@ -29,35 +29,27 @@ let blog: Blog = reactive({
     content: ""
 })
 
-get_blog_content(id as number).then(
-    response => {
-        let result: CodeInfo<Blog> = response.data;
-        if (result.code != 0){
-            popup_message("博客内容加载失败: " + result.message, "error")
-        } else {
-            blog.id = result.data.id
-            blog.authorid = result.data.authorid
-            blog.status = result.data.status
-            blog.description = result.data.description
-            blog.content = result.data.content
-            console.log(blog)
-        }
-    }
-).catch(
-    err => {
-        popup_message("博客内容加载失败: " + err.message, "error")
-    }
-)
+let result = (await get_blog_content(id as number)).data;
+if (result.code != 0) {
+    popup_message("博客内容加载失败: " + result.message, "error")
+} else {
+    blog.id = result.data.id
+    blog.authorid = result.data.authorid
+    blog.status = result.data.status
+    blog.description = result.data.description
+    blog.content = result.data.content
+    console.log(blog)
+}
 
 let upload_process = ref(0)
 let is_uploading = ref(false)
 
-function event_file_upload_click(){
+function event_file_upload_click() {
     let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
-    if (files && files.length > 0){
+    if (files && files.length > 0) {
         is_uploading.value = true
 
-        upload_flie(files[0], "/file/upload?id=" + blog.id ,upload_process).then(
+        upload_flie(files[0], "/file/upload?id=" + blog.id, upload_process).then(
             response => {
                 is_uploading.value = false
             }
@@ -74,15 +66,15 @@ function event_file_upload_click(){
 
 }
 
-function event_post_click(){
+function event_post_click() {
     blog_edit(blog.id, "默认描述", blog.content).then(
         response => {
             let result = response.data as CodeInfo<number>
-            if (result.code != 0){
+            if (result.code != 0) {
                 popup_message("提交出错" + result.message, "error");
             } else {
                 popup_message("提交成功", "success");
-            } 
+            }
         }
     ).catch(err => {
         popup_message("提交出错", "error");
@@ -94,10 +86,10 @@ function event_post_click(){
 
 <template>
     <div id="main">
-        <input class="style_file_content" accept="*" type="file" id="upload_file_id"/>
+        <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
         <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
-        <editor.mavonEditor v-model="blog.content"/>
+        <editor.mavonEditor v-model="blog.content" />
         <button @click=event_post_click>发布</button>
     </div>
 </template>
@@ -108,6 +100,5 @@ function event_post_click(){
 #main {
     height: 90vh;
 }
-
 </style>
   

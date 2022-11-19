@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
-import Editor from '@/component/Editor.vue'
+import EditorApp from '@/EditorApp.vue'
 
-let app = createApp(Editor)
+let app = createApp(EditorApp)
 
 app.mount('#mount-point')
