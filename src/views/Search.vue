@@ -11,26 +11,49 @@ const route = useRouter();
 let paths = ref(route.currentRoute.value.path)
 let searchcontent = ref(paths.value.split("/",3)[2])
 
-interface Blog {
-    id: number
-    authorid: number
-    description: string
-    content: string
+function backblogs(){
+        route.push("/Blogs")   
 }
 
-let blog_list: Ref<Blog[]> = ref([])
+interface Blog {
+    
+    authorid: number
+    content: string
+    description: string
+    id: number
+    status:number
+    type:string
+    
+}
+
+interface Poster{
+    _id:string
+    _index:string
+    _score:number
+    _source:Blog
+}
+
+let blog_list: Ref<Poster[]> = ref([])
 
 function event_open_blog_click(blog_id: number) {
     window.open("/blog_editor.html?id=" + blog_id)
 }
 
 function event_search(){
-    api.get("/open/search?keyword="+searchcontent.value).then(response => {
+    api.get("/all/search?keyword="+searchcontent.value).then(response => {
     console.log(response)
+    blog_list.value = response.data.hits.hits
     //blog_list = response
   })
 }
 event_search()
+
+function event_toaid(auid:number|undefined){
+  if(auid == 0 || !auid){popup_message("不存在的用户" , "error")}
+  else route.push({name:"Page",params:{auid:auid}})
+}
+
+
 
 </script>
 
@@ -38,27 +61,26 @@ event_search()
 
     <body>
         <div class="titlebox">
-            <h1>我的主页</h1>
+            <button class="returnbox" @click="backblogs">返回</button>
+            <h1>搜索结果</h1>
         </div>
         <div class="box">
-
+            <div class="blogbox">
             <table class="imagetable">
             <tr>
                 <th class="id1">博客id</th>
                 <th class="id1">作者id</th>
                 <th class="description">简介</th>
             </tr>
-            <tr class="blog_line" @click="event_open_blog_click(blog.id)" v-for=" blog in blog_list">
-                <td class="id1">{{ blog.id }}</td>
-                <td class="id1">{{ blog.authorid }}</td>
-                <td class="description">{{ blog.description }}
+            <tr class="blog_line" @click="event_open_blog_click(blog._source.id)" v-for=" blog in blog_list">
+                <td class="id1">{{ blog._source.id }}</td>
+                <td class="id2" @click="event_toaid(blog._source.authorid)">{{ blog._source.authorid }}</td>
+                <td class="description" @click="event_open_blog_click(blog._source.id)">{{ blog._source.description }}
                 </td>
             </tr>
         </table>
 
         </div>
-        <div class="buttonbox">
-            <button>退出登录</button>
         </div>
     </body>
 </template>
@@ -77,6 +99,27 @@ body {
         background-position: center;
         background-origin: border-box;
     }
+
+    .box{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        width: 80vw;
+
+        height: 80vh;
+    
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    
+        backdrop-filter: blur(10px);
+
+        overflow: hidden;
+        overflow-y: scroll; 
+    } 
 .blogbox {
 
 justify-content: center;
@@ -84,22 +127,42 @@ align-items: center;
 
 margin: 1em;
 }
+.titlebox{
+        display: flex;
+        flex-direction:row;
+        justify-content: center;
+        align-items: center;
+        width: 80vw;
+        height: 8vh;
+        margin-top: 0vh;
+
+    }
+.titlebox > h1 {
+        position:relative;
+        margin-top: 0.1vh;
+        margin-right: 28vw;
+        color: rgb(8, 7, 4);
+        font-size: 2vw;
+    }
 
 
 
-.blogbox>ul {
+.titlebox > button{
+        position:relative;
+        margin-top: 0vh;
+        margin-right: 20vw;
+        width: 5vw;
+        height: 4vh;
+        border-radius: 20px;
+        border: 1px solid rgba(56, 20, 15, 0.5);
+        background-color: rgba(251, 189, 5, 0.856);
+        color: rgba(2, 2, 0, 0.7);
+        transition: 1s;
+        font-size: 0.8vw;
+        cursor: pointer;
+    }
 
-margin-top: 20px;
-margin-right: 10px;
-font-size: 40px;
-color: rgba(213, 201, 201, 0.9);
 
-}
-
-span {
-margin-top: 10px;
-
-}
 
 .box>button {
 margin: 10px;

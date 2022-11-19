@@ -4,10 +4,12 @@
 <body>
   <div class = "titlebox">
     <h2>博客天地</h2>
+    <!-- 
     <select v-model="seris">
     <option value="0">文章</option>
     <option value="1">用户</option>
   </select>
+   -->
           <input class="" type="text" placeholder="请输入搜索内容" v-model=searchcontent />
           <button class="search" @click="event_search">搜索</button>
     </div> 
@@ -27,7 +29,7 @@
             <tr v-for="descrebe in descriptions">
                 <td class="id1">{{ descrebe.id }}</td>
                 <td class="id2" @click="event_toaid(descrebe.authorid)">{{ descrebe.authorid }}</td>
-                <td class="description">{{ descrebe.description }}</td>
+                <td class="description" @click="event_open_blog_click(descrebe.id)">{{ descrebe.description }}</td>
             </tr>
         </table>
 
@@ -133,6 +135,11 @@ let blogget:CodeInfo<BlogInfo>= reactive(
       }
     }
 )
+
+function event_open_blog_click(blog_id: number | undefined) {
+  if(!blog_id){}
+  else  window.open("/blog_editor.html?id=" + blog_id)
+}
 
 const router = useRouter();
 function event_toaid(auid:number|undefined){

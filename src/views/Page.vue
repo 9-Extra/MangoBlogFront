@@ -23,7 +23,7 @@
             <tr v-for="blg in blogdatas" :key="blg.id">
                 <td class="ids">{{ blg.id }}</td>
                 <td class="ids" @click="blog_detail(blg.authorid)">{{ blg.authorid }}</td>
-                <td class="description">{{ blg.description }}</td>
+                <td class="description" @click="event_open_blog_click(blg.id)">{{ blg.description }}</td>
             </tr>
         </table>
     </div>
@@ -51,6 +51,11 @@
         }
     }
 );
+
+function event_open_blog_click(blog_id: string) {
+  if(!blog_id){}
+  else  window.open("/blog_editor.html?id=" + blog_id)
+}
 
     let blogdatas = ref([{
         id:auid,
@@ -109,8 +114,9 @@
         flex-direction: row;
         justify-content: center;
         align-items: flex-start;
-        width: 1600px;
-        height: 700px;
+        width: 80vw;
+
+        height: 70vh;
     
         border-top: 1px solid rgba(255, 255, 255, 0.5);
         border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -165,7 +171,7 @@
         color: rgba(2, 2, 0, 0.7);
         transition: 1s;
         font-size: 0.8vw;
-        
+        cursor: pointer;
     }
 
     button:hover {
