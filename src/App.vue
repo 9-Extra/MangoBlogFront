@@ -5,7 +5,9 @@ import Headline from "@/views/Headline.vue";
 <template>
     <Headline />
     <Suspense>
-        <router-view />
+        <template #default>
+            <router-view />
+        </template>
         <template #fallback>
 
             Loading...

@@ -3,17 +3,17 @@ import popup_message from "./message_popup";
 import { upload_flie } from "./file_util";
 import type { Ref } from "vue";
 
-interface User{
+export interface User{
     id: number
     nickname: string
     head_image: string
     privilege: string //权限
 }
 
-export async function get_user_information(): Promise<User | null> {
+export function get_user_information() {
     return api.post("/me").then(response => {
         if (response.data.code != 0){
-            popup_message(response.data.message, "error");
+            popup_message("无法获取用户信息: " + response.data.message, "error");
             return null;
         }    
         let data_user = response.data.data;
@@ -27,7 +27,8 @@ export async function get_user_information(): Promise<User | null> {
 
         return user;
     }).catch(err => {
-        popup_message("网络出错", "error")
+        popup_message("网络出错: " + err.message, "error")
+        
         return null;
     })
 }

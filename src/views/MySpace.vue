@@ -1,22 +1,42 @@
 <script setup lang="ts">
-import { get_user_information } from '@/utils/user_util';
+import { get_user_information, type User } from '@/utils/user_util';
 import token_util from "@/utils/token_util";
 import router from '@/router';
 import { reactive } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
 
-if (!token_util.get_token()){
+
+function event_logout_click(){
+    token_util.set_token(null);
+    router.push("/Login")
+}
+
+if (!token_util.get_token()) {
     router.replace("/Login")
 }
 
-let user_rep = await get_user_information()
-if (user_rep != null){
-    let user = reactive(user_rep)
-    console.log(user_rep)
-} else {
-    router.replace("/Login")
-}
+let user: User = reactive({
+    id: 0,
+    nick_name: '',
+    head_image: '',
+    status: ''
+})
+
+get_user_information().then(
+    user_rep => {
+        if (user_rep != null) {
+            user.id = user_rep.id
+            user.nick_name = user_rep.nick_name
+            user.status = user.status
+            user.head_image = user.head_image
+        } else {
+            router.replace("/Login")
+        }
+    }).catch(err => {
+        popup_message("后端异常: " + err.message, "error")
+        router.replace("/Login")
+    })
 
 </script>
 
@@ -31,7 +51,7 @@ if (user_rep != null){
             <BlogList id="list_continer"></BlogList>
 
         </div>
-        <div class="buttonbox">
+        <div class="buttonbox" @click="event_logout_click">
             <button>退出登录</button>
         </div>
     </body>
@@ -118,7 +138,7 @@ h1 {
     margin-left: 40px;
 }
 
-.buttonbox > button{
+.buttonbox>button {
     margin: 10px;
     width: 5vw;
     height: 4vh;
@@ -130,7 +150,7 @@ h1 {
     font-size: 0.8vw;
 }
 
-.buttonbox > button:hover {
+.buttonbox>button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
 }
