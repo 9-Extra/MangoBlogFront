@@ -100,6 +100,7 @@ function event_post_click() {
         response => {
             let result = response.data as CodeInfo<number>
             if (result.code != 0) {
+                console.log(blog)
                 popup_message("提交出错" + result.message, "error");
             } else {
                 popup_message("提交成功", "success");

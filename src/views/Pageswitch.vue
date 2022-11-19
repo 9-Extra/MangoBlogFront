@@ -7,12 +7,13 @@
             {{btn.num}}
         </button>
         <button @click="changeBtnnext">下一页</button>
+        <button @click="changeBtnnend">末页</button>
     </div>
 
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref, reactive , watch } from "vue"
 
 
 
@@ -21,6 +22,10 @@ import { ref, reactive } from "vue"
 
 const props = defineProps({
   modelValue: {
+    type: Number,
+    required: true
+  },
+  maxpage: {
     type: Number,
     required: true
   }
@@ -38,6 +43,19 @@ let pagebtns = reactive([
 {id:5,num:5}
 ])
 let currentPage = ref(1);
+
+watch(() => props.modelValue, (newValue, oldValue) => {
+  event_renew();
+})
+let maxp = props.maxpage;
+watch(() => props.maxpage, (newValue, oldValue) => {
+  maxp = props.maxpage
+})
+
+function event_renew(){
+    currentPage.value = props.modelValue;
+    changeBtn(currentPage.value)
+}
 
 
 function changeBtn1(){
@@ -71,14 +89,26 @@ function changeBtnpre(){
 }
 function changeBtn(page){
     currentPage.value = page;
-    if(currentPage.value >= 3){
+    if(currentPage.value >= 3 && currentPage.value <= maxp - 2){
         for (let index = 0; index < 5; index++) {
             pagebtns[index].num = currentPage.value - 2 + index;
         }
     }
-    else{for (let index = 0; index < 5; index++) {
+    else if(currentPage.value <= 2){
+        for (let index = 0; index < 5; index++) {
             pagebtns[index].num = 1 + index;
-        }}
+        }
+    }
+    else if(maxp >= 5){
+        for (let index = 0; index < 5; index++) {
+            pagebtns[index].num = maxp - 4 + index;
+        }
+    }
+    else {
+        for (let index = 0; index < 5; index++) {
+        pagebtns[index].num = index + 1;
+        }
+    }
 
     emit('update:modelValue', currentPage.value)
 }
@@ -87,7 +117,7 @@ function changeBtnnext(){
 
         currentPage.value++;
 
-        if(currentPage.value >= 3){
+        if(currentPage.value >= 3 && currentPage.value <= maxp - 2){
         for (let index = 0; index < 5; index++) {
             pagebtns[index].num = currentPage.value - 2 + index;
         }
@@ -96,6 +126,23 @@ function changeBtnnext(){
     emit('update:modelValue', currentPage.value)
    
 }
+
+function changeBtnnend(){
+    currentPage.value = maxp;
+    emit('update:modelValue', currentPage.value)
+    if(maxp >= 5){
+    for (let index = 0; index < 5; index++) {
+        pagebtns[index].num = maxp - 4 + index;
+    }
+    }
+    else {
+        for (let index = 0; index < 5; index++) {
+        pagebtns[index].num = index + 1;
+        }
+    }
+}
+
+
 
 
 
@@ -107,7 +154,7 @@ function changeBtnnext(){
   .pagination {
     margin-top: 5px;
     margin-bottom: 20px;
-    background-color: white;
+    background-color: rgb(255, 191, 0);
     padding: 6px 20px;
     border-radius: 5px;
     /*box-shadow: 0px 2px 9px #888888;*/
@@ -115,9 +162,9 @@ function changeBtnnext(){
   }
 
   button {
-    background-color: #fff;
+    background-color: rgb(255, 234, 0);
     border: 1px solid #ddd;
-    color: #778087;
+    color: #877777;
     border-radius: 3px;
     outline: none;
     height: 21px;
@@ -136,7 +183,7 @@ function changeBtnnext(){
 
   .currentPage {
     color: white;
-    background-color: #1f1b1b;
+    background-color: #c47c00;
 
   }
 </style>

@@ -31,7 +31,7 @@
     </div>
     
   </div>
-  <Pageswitch v-model:modelValue="pagenum"></Pageswitch>
+  <Pageswitch v-model:modelValue="pagenum" v-model:maxpage="pagemax"></Pageswitch>
 </body>
 </template>
 
@@ -49,49 +49,49 @@ let pagenum = ref(1);
 let descriptions = reactive(
     [
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },
   {
-    id:0,
+    id:undefined,
     description: "",
-    authorid:0
+    authorid:undefined
   },])
 
 
@@ -124,12 +124,30 @@ let blogget:CodeInfo<BlogInfo>= reactive(
       }
     }
 )
+
 const router = useRouter();
-function event_toaid(auid:number){
-  if(auid == 0){popup_message("不存在的用户" , "error")}
+function event_toaid(auid:number|undefined){
+  if(auid == 0 || !auid){popup_message("不存在的用户" , "error")}
   else router.push({name:"Page",params:{auid:auid}})
 }
 
+let availablenum = 0;
+let pagemax = 0;
+async function findav(){
+  for (let index = 1; index <= 500; index++) {
+
+  await api.get("/open/blog/?id="+index).then(response => {
+    if(response.data.code == 0){
+      availablenum++;
+    }
+    }).catch(error => {
+      popup_message("加载失败: " + error.message, "error")
+    })
+  }
+  pagemax = Math.trunc((availablenum / 9)) + 1
+}
+
+findav()
 
 
 
@@ -138,20 +156,34 @@ let findnum = 0;
 let realnum = 1;
 
 for(let i = 1; i<=pagenum.value;i++){
-  if(i!=pagenum.value)popup_message("加载中,请稍后... " , "success")
+  if(i!=pagenum.value && i==1)popup_message("加载中,请稍后... " , "success")
 
-  for (let index = 1; index <= 1000; index++) {
+  for (let index = 1; index <= 500; index++) {
 
     await api.get("/open/blog/?id="+realnum).then(response => {
         if(response.data.code == 0){
-        descriptions[findnum].authorid = response.data.data.authorid
-        descriptions[findnum].id = response.data.data.id
-        descriptions[findnum].description = response.data.data.description
+          if(i == pagenum.value){
+          descriptions[findnum].authorid = response.data.data.authorid
+          descriptions[findnum].id = response.data.data.id
+          descriptions[findnum].description = response.data.data.description
+          }
         findnum++;
         }
     }).catch(error => {
         popup_message("加载失败: " + error.message, "error")
     })
+
+    if(index == 500){
+      if(findnum==0){
+        popup_message("已到博客列表末尾,为您跳转至末页" , "error")
+        pagenum.value = pagemax;
+      }
+      for(;findnum<=8;findnum++){
+        descriptions[findnum].authorid = undefined
+        descriptions[findnum].id = undefined
+        descriptions[findnum].description = ""
+      }
+    }
 
     realnum++;
     //console.log(realnum)
