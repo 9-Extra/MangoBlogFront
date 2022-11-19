@@ -49,7 +49,7 @@ if (id == null) {
     )
 }
 
-await get_blog_content(blog.id as number).then(
+await get_blog_content(id as number).then(
     response => {
         let result = response.data;
         if (result.code != 0) {
