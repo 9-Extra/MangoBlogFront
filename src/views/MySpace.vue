@@ -18,17 +18,17 @@ if (!token_util.get_token()) {
 
 let user: User = reactive({
     id: 0,
-    nick_name: '',
+    nickname: '',
     head_image: '',
-    status: ''
+    privilege: ''
 })
 
 get_user_information().then(
     user_rep => {
         if (user_rep != null) {
             user.id = user_rep.id
-            user.nick_name = user_rep.nick_name
-            user.status = user.status
+            user.nickname = user_rep.nickname
+            user.privilege = user.privilege
             user.head_image = user.head_image
         } else {
             router.replace("/Login")
