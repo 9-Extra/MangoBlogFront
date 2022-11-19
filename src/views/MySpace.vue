@@ -23,20 +23,18 @@ let user: User = reactive({
     privilege: ''
 })
 
-get_user_information().then(
+await get_user_information().then(
     user_rep => {
-        if (user_rep != null) {
-            user.id = user_rep.id
-            user.nickname = user_rep.nickname
-            user.privilege = user.privilege
-            user.head_image = user.head_image
-        } else {
-            router.replace("/Login")
-        }
-    }).catch(err => {
-        popup_message("后端异常: " + err.message, "error")
-        router.replace("/Login")
-    })
+        user.id = user_rep.id
+        user.nickname = user_rep.nickname
+        user.head_image = user_rep.head_image
+        user.privilege = user_rep.privilege
+    }
+)
+.catch(err => {
+    popup_message("后端异常: " + err.message, "error")
+    router.replace("/Login")
+})
 
 </script>
 
