@@ -31,25 +31,29 @@ let blog: Blog = reactive({
     content: ""
 })
 
-let id: number | null = get_blog_id()
-if (id == null) {
-    //如果id不存在，认为是新建博客
-    await blog_new().then(
-        response => {
-            if (response.data.code != 0) {
-                error_exit("新建博客失败: " + response.data.message)
-            } else {
-                blog.id = response.data.data;
+//如果id不存在，认为是新建博客，如果id存在则打开
+{
+    let id: number | null = get_blog_id()
+    if (id == null) {
+        await blog_new().then(
+            response => {
+                if (response.data.code != 0) {
+                    error_exit("新建博客失败: " + response.data.message)
+                } else {
+                    blog.id = response.data.data;
+                }
             }
-        }
-    ).catch(
-        err => {
-            error_exit("新建博客失败: " + err.message)
-        }
-    )
+        ).catch(
+            err => {
+                error_exit("新建博客失败: " + err.message)
+            }
+        )
+    } else {
+        blog.id = id;
+    }
 }
 
-await get_blog_content(id as number).then(
+await get_blog_content(blog.id).then(
     response => {
         let result = response.data;
         if (result.code != 0) {
@@ -114,7 +118,7 @@ function event_post_click() {
         <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
         <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
-        <editor.mavonEditor v-model="blog.content"/>
+        <editor.mavonEditor v-model="blog.content" />
         <button @click=event_post_click>发布</button>
     </div>
 </template>
