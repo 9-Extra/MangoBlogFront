@@ -4,14 +4,15 @@
 <body>
   <div class = "titlebox">
     <h2>博客天地</h2>
-    <!-- 
+
     <select v-model="seris">
     <option value="0">文章</option>
     <option value="1">用户</option>
   </select>
-   -->
+
           <input class="" type="text" placeholder="请输入搜索内容" v-model=searchcontent />
           <button class="search" @click="event_search">搜索</button>
+          <button class="owner" v-if="(previ == 2)" @click="to_prev2">管理员设置</button>
     </div> 
   
   <div class = "box">
@@ -48,7 +49,7 @@ import { ref, reactive , watch } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import Pageswitch from "@/views/Pageswitch.vue";
-
+import { get_user_information } from '@/utils/user_util';
 
 let seris = ref(0);//0代表搜文章 1 代表搜id
 
@@ -224,8 +225,20 @@ function event_search(){
   
 }
 
+let previ = ref(0);
+async function prevget(){
 
+  let user_rep = await get_user_information()
+  if(user_rep?.privilege == "2"){
+    popup_message("网站拥有者,欢迎您" , "success")
+    previ.value = 2;
+  }
+}
+prevget();
 
+function to_prev2(){
+  router.push("/Prev2")
+}
 
 
 
@@ -272,7 +285,7 @@ function event_search(){
         flex-direction:row;
         justify-content: center;
         align-items: center;
-        width: 80vw;
+        width: 100vw;
         height: 8vh;
         margin-top: 5vh;
 
@@ -307,6 +320,20 @@ function event_search(){
           transition: 1s;
           font-size: 0.8vw;
           
+      }
+
+      .owner{
+        position:relative;
+
+          margin-left: 5vw;
+          width: 6vw;
+          height: 5vh;
+          border-radius: 20px;
+          border: 1px solid rgba(56, 20, 15, 0.5);
+          background-color: rgba(255, 226, 139, 0.856);
+          color: rgba(2, 2, 0, 0.7);
+          transition: 1s;
+          font-size: 0.9vw;
       }
 
       select{

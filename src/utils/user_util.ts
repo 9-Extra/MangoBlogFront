@@ -7,7 +7,7 @@ interface User{
     id: number
     nick_name: string
     head_image: string
-    status: string //权限
+    privilege: string //权限
 }
 
 export async function get_user_information(): Promise<User | null> {
@@ -22,7 +22,7 @@ export async function get_user_information(): Promise<User | null> {
             id: data_user.id,
             nick_name: data_user.nick_name,
             head_image: data_user.head_image,
-            status: data_user.privilege
+            privilege: data_user.privilege
         }
 
         return user;

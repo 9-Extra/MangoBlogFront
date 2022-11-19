@@ -13,6 +13,8 @@ const Blogs = () => import("../views/Blogs.vue");
 const Page = () => import("../views/Page.vue");
 const MySpace = () => import("../views/MySpace.vue");
 const Search = () => import("../views/Search.vue");
+const Prev2 = () => import("../views/Prev2.vue");
+
 const routes = [
     {
         path: "/",
@@ -22,6 +24,11 @@ const routes = [
         path: "/Search/:searchin",
         name: "Search",
         component: Search,
+    },
+    {
+        path: "/Prev2",
+        name: "Prev2",
+        component: Prev2,
     },
     {
         path: "/Register",
