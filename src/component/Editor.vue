@@ -15,31 +15,56 @@ function get_blog_id(): number | null {
     return id
 }
 
-let id: number | null = get_blog_id()
-if (id == null) {
-    //如果id不存在，认为是新建博客
-    id = (await blog_new()).data.data;
+async function error_exit(msg: string) {
+    popup_message(msg, "error")
+    await setTimeout(() => {
+        location.href = "/#/Me"
+    }, 2000);
 }
 
+//开始
 let blog: Blog = reactive({
-    id: id as number,
+    id: 0,
     authorid: 0,
     status: 0,
     description: "",
     content: ""
 })
 
-let result = (await get_blog_content(id as number)).data;
-if (result.code != 0) {
-    popup_message("博客内容加载失败: " + result.message, "error")
-} else {
-    blog.id = result.data.id
-    blog.authorid = result.data.authorid
-    blog.status = result.data.status
-    blog.description = result.data.description
-    blog.content = result.data.content
-    console.log(blog)
+let id: number | null = get_blog_id()
+if (id == null) {
+    //如果id不存在，认为是新建博客
+    await blog_new().then(
+        response => {
+            if (response.data.code != 0) {
+                error_exit("新建博客失败: " + response.data.message)
+            } else {
+                blog.id = response.data.data;
+            }
+        }
+    ).catch(
+        err => {
+            error_exit("新建博客失败: " + err.message)
+        }
+    )
 }
+
+await get_blog_content(blog.id as number).then(
+    response => {
+        let result = response.data;
+        if (result.code != 0) {
+            error_exit("博客内容加载失败: " + result.message)
+        } else {
+            blog.id = result.data.id
+            blog.authorid = result.data.authorid
+            blog.status = result.data.status
+            blog.description = result.data.description
+            blog.content = result.data.content
+        }
+    }
+).catch(err => {
+    error_exit("博客内容加载失败: " + err.message)
+})
 
 let upload_process = ref(0)
 let is_uploading = ref(false)
@@ -89,7 +114,7 @@ function event_post_click() {
         <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
         <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
-        <editor.mavonEditor v-model="blog.content" />
+        <editor.mavonEditor v-model="blog.content"/>
         <button @click=event_post_click>发布</button>
     </div>
 </template>
