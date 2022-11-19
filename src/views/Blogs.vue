@@ -151,6 +151,8 @@ function event_toaid(auid:number|undefined){
 let availablenum = 0;
 let pagemax = 0;
 async function findav(){
+  let errorgiv = 0;
+  
   for (let index = 1; index <= 200; index++) {
 
   await api.get("/open/blog/?id="+index).then(response => {
@@ -158,7 +160,10 @@ async function findav(){
       availablenum++;
     }
     }).catch(error => {
+      if(errorgiv == 0){
       popup_message("加载失败: " + error.message, "error")
+      errorgiv = 1;
+      }
     })
   }
   pagemax = Math.trunc((availablenum / 9)) + 1
@@ -171,6 +176,7 @@ findav()
 async function event_download(){
 let findnum = 0;
 let realnum = 1;
+let errorgiv = 0;
 
 for(let i = 1; i<=pagenum.value;i++){
   if(i!=pagenum.value && i==1)popup_message("加载中,请稍后... " , "success")
@@ -187,7 +193,10 @@ for(let i = 1; i<=pagenum.value;i++){
         findnum++;
         }
     }).catch(error => {
+        if(errorgiv == 0){
         popup_message("加载失败: " + error.message, "error")
+        errorgiv = 1;
+        }
     })
 
     if(index == 200){
