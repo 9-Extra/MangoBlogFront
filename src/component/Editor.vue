@@ -1,10 +1,31 @@
 <script setup lang="ts">
 import editor from "mavon-editor"
 import 'mavon-editor/dist/css/index.css'
-import { reactive, ref } from "vue"
+import { reactive, ref, type Ref } from "vue"
 import { upload_flie } from "@/utils/file_util";
 import popup_message from "@/utils/message_popup";
 import { blog_edit, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
+import api from "@/utils/axios_blog";
+
+const md = ref(null) as Ref<any>//获取的editor子组件对象
+//定义各种函数
+async function img_add(pos, file){
+    upload_flie(file, "/file/upload?id=" + blog.id, upload_process).then(
+        response => {
+            let url = response.data.data;
+            md.value.$img2Url(pos, api.getUri() + "/image/download" + url);
+        }
+    ).catch(err => {
+        popup_message("上传图片失败: " + err.message, "error")
+        md.value.$img2Url(pos, "");
+        md.value.$refs.toolbar_left.$imgDelByFilename(pos)
+    });
+    
+}
+
+function img_del(pos, file){
+    //什么都不做
+}
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
@@ -40,7 +61,9 @@ let blog: Blog = reactive({
                 if (response.data.code != 0) {
                     error_exit("新建博客失败: " + response.data.message)
                 } else {
-                    blog.id = response.data.data;
+                    let id = response.data.data;
+                    location.search = "?id=" + id; 
+                    blog.id = id;
                 }
             }
         ).catch(
@@ -119,7 +142,7 @@ function event_post_click() {
         <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
         <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
-        <editor.mavonEditor v-model="blog.content" />
+        <editor.mavonEditor ref ="md" @imgAdd=img_add @imgDel=img_del v-model="blog.content" />
         <button @click=event_post_click>发布</button>
     </div>
 </template>

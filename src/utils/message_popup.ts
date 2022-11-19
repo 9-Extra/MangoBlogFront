@@ -27,6 +27,9 @@ document.body.appendChild(div)
 // 定时器标识
 
 function popup_message(text: String, type: String) {
+
+    console.log(text)
+
     const vnode = createVNode(MessagePopupVue, { type, text})
     // 3. 准备一个DOM容器
     // 4. 把虚拟节点渲染挂载到DOM容器中
