@@ -5,7 +5,7 @@ import type { Ref } from "vue";
 
 interface User{
     id: number
-    nick_name: string
+    nickname: string
     head_image: string
     privilege: string //权限
 }
@@ -20,7 +20,7 @@ export async function get_user_information(): Promise<User | null> {
 
         let user: User = {
             id: data_user.id,
-            nick_name: data_user.nick_name,
+            nickname: data_user.nickname,
             head_image: data_user.head_image,
             privilege: data_user.privilege
         }

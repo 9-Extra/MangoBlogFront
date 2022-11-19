@@ -190,7 +190,7 @@ for(let i = 1; i<=pagenum.value;i++){
         popup_message("加载失败: " + error.message, "error")
     })
 
-    if(index == 500){
+    if(index == 200){
       if(findnum==0){
         popup_message("已到博客列表末尾,为您跳转至末页" , "error")
         pagenum.value = pagemax;

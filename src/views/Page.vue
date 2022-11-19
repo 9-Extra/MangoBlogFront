@@ -86,7 +86,7 @@ function event_open_blog_click(blog_id: string) {
     }
 
     function backblogs(){
-        router.push("/Blogs")   
+        router.go(-1) 
     }
     </script>
 

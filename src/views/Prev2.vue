@@ -10,12 +10,12 @@ import { useRouter } from 'vue-router'
 const route = useRouter();
 
 function backblogs(){
-        route.push("/Blogs")   
+        route.go(-1)   
 }
 
 interface auser {
     id: number
-    nick_name: string
+    nickname: string
     age: number
     password: string
     privilege:number
@@ -24,12 +24,11 @@ interface auser {
 
 let users_list: Ref<auser[]> = ref([])
 
-function event_open_blog_click(blog_id: number) {
-    window.open("/blog_editor.html?id=" + blog_id)
-}
 
 function event_search(){
-    api.get("/users").then(response => {})
+    api.get("/users").then(response => {
+        users_list.value = response.data;
+    })
 }
 event_search()
 
@@ -38,7 +37,23 @@ function event_toaid(auid:number|undefined){
   else route.push({name:"Page",params:{auid:auid}})
 }
 
+function level(prev:number):string{
+    if(prev == 2) return "网站拥有者"
+    else if(prev == 1) return "管理员"
+    else return "普通用户"
+}
 
+function leveldown(id){
+    api.post("/degrade?id="+id).then(response => {
+        event_search()
+    })
+}
+
+function levelup(id){
+    api.post("/upgrade?id="+id).then(response => {
+        event_search()
+    })
+}
 
 </script>
 
@@ -47,21 +62,24 @@ function event_toaid(auid:number|undefined){
     <body>
         <div class="titlebox">
             <button class="returnbox" @click="backblogs">返回</button>
-            <h1>搜索结果</h1>
+            <h1>用户列表</h1>
         </div>
         <div class="box">
             <div class="blogbox">
             <table class="imagetable">
             <tr>
-                <th class="id1">用户id</th>
-                <th class="id1">用户昵称</th>
+                <th class="id2">用户id</th>
+                <th class="id2">用户昵称</th>
                 <th class="description">用户权限等级</th>
             </tr>
-            <tr class="blog_line" @click="event_toaid(useri.id)" v-for=" useri in users_list">
-                <td class="id1">{{ useri.id }}</td>
-                <td class="id2" @click="event_toaid(useri.id)">{{ useri.nick_name }}</td>
-                <td class="description" >{{ useri.privilege }}
+            <tr class="blog_line" v-for=" useri in users_list">
+                <td class="id2" @click="event_toaid(useri.id)">{{ useri.id }}</td>
+                <td class="id2" @click="event_toaid(useri.id)">{{ useri.nickname }}</td>
+                <td class="description" >{{level(useri.privilege) }}
+                    <button class="delete" v-if="useri.privilege == 1" @click="leveldown(useri.id)">降级</button>
+                    <button class="delete" v-if="useri.privilege == 0" @click="levelup(useri.id)">升级</button>
                 </td>
+                
             </tr>
         </table>
 
@@ -213,10 +231,6 @@ border-color: #999999;
 font-size: 2vw;
 }
 
-.description:hover{
-text-decoration:underline;
-cursor: pointer;
-}
 
 .delete{
 cursor: pointer;
@@ -237,7 +251,5 @@ border: 1px solid rgba(255, 34, 56, 0.8);
 background-color: rgba(255, 34, 56, 0.838);
 }
 
-.blog_line {
-cursor: pointer;
-}
+
 </style>

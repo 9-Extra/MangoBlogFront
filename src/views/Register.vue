@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import token_util from "@/utils/token_util";
 
 interface PersonInfo {
-    nick_name: string
+    nickname: string
     age: string
     password: string
 }
@@ -29,7 +29,7 @@ interface PersonInfoL {
 
 let person: PersonInfo = reactive(
     {
-        nick_name: "",
+        nickname: "",
         age: "",
         password: ""
     }
@@ -47,7 +47,7 @@ const router = useRouter();
 function event_register_click() {
 
 
-    if (person.nick_name.length < 3) {
+    if (person.nickname.length < 3) {
         popup_message("昵称太短", "warn")
         return
     }
@@ -62,7 +62,7 @@ function event_register_click() {
     }
 
     let person_data = {
-        nick_name: person.nick_name,
+        nickname: person.nickname,
         age,
         password: person.password
     }
@@ -118,7 +118,7 @@ function event_register_click() {
             <div>
                 <div class="input-box">
                     <label>昵称:</label>
-                    <input class="" type="text" placeholder="昵称" v-model=person.nick_name />
+                    <input class="" type="text" placeholder="昵称" v-model=person.nickname />
                 </div>
                 <div class="input-box">
                     <label>年龄:</label>
