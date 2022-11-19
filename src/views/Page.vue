@@ -2,8 +2,9 @@
 
 
     <body>
-
+        
      <div class = "titlebox">
+        <button class="returnbox" @click="backblogs">返回</button>
     <h2 v-if="(auid == myid)">我的主页</h2>
     <h2 v-else>作者主页</h2>
     <h1 v-if="(auid == myid)">我的id:{{auid}}</h1>
@@ -64,7 +65,6 @@
         api.get("/open/blogs/?id="+auid.value).then(response => {
             if (response.data.code == 0){
                 blogdatas.value = response.data.data
-                popup_message("加载成功", "success")
             } else {
                 blogdatas.value = []
                 popup_message("错误" + response.data.message, "error")
@@ -79,10 +79,19 @@
     function blog_detail(aid){
 
     }
+
+    function backblogs(){
+        router.push("/Blogs")   
+    }
     </script>
+
+    
     
     
     <style scoped>
+
+    
+
     body {
         display: flex;
         flex-direction: column;
@@ -117,38 +126,51 @@
 
     .titlebox{
         display: flex;
-        flex-direction:column;
+        flex-direction:row;
         justify-content: center;
         align-items: center;
-        width: 30vw;
-        height: 12vh;
-        margin-top: 5vh;
+        width: 60vw;
+        height: 8vh;
+        margin-top: 4vh;
 
-        background-color:rgb(250, 171, 34);
-    
-        border-top: 1px solid rgba(255, 255, 255, 0.5);
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-    
-        backdrop-filter: blur(10px);
+
 
 
     }
     
-    h2 {
+    .titlebox > h2 {
         position:relative;
-        bottom: 10px;
+        margin-top: 0.5vh;
         color: rgb(8, 7, 4);
         font-size: 3vw;
     }
 
-    h1 {
+    .titlebox > h1 {
         position:relative;
-        bottom: 10px;
+        margin-top: 5vh;
+        margin-left: 15vw;
         color: rgb(13, 13, 12);
         font-size: 1vw;
+    }
+
+    .titlebox > button{
+        position:relative;
+        margin-top: 1vh;
+        margin-right: 15vw;
+        width: 5vw;
+        height: 4vh;
+        border-radius: 20px;
+        border: 1px solid rgba(56, 20, 15, 0.5);
+        background-color: rgba(251, 189, 5, 0.856);
+        color: rgba(2, 2, 0, 0.7);
+        transition: 1s;
+        font-size: 0.8vw;
+        
+    }
+
+    button:hover {
+    border: 1px solid rgba(255, 34, 56, 0.8);
+    background-color: rgba(255, 34, 56, 0.838);
     }
     
     .blogbox {
@@ -222,6 +244,11 @@ table.imagetable td{
     border-style: solid;
     border-color: #999999;
     font-size: 2vw;
+}
+
+.description:hover{
+  text-decoration:underline;
+  cursor: pointer;
 }
     
     </style>

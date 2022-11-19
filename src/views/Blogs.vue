@@ -15,13 +15,13 @@
 
       <table class="imagetable">
             <tr>
-                <th class="ids">博客id</th>
-                <th class="ids">作者id</th>
+                <th class="id1">博客id</th>
+                <th class="id2">作者id</th>
                 <th class="description">简介</th>
             </tr>
             <tr v-for="descrebe in descriptions">
-                <td class="ids">{{ descrebe.id }}</td>
-                <td class="ids" @click="event_toaid(descrebe.authorid)">{{ descrebe.authorid }}</td>
+                <td class="id1">{{ descrebe.id }}</td>
+                <td class="id2" @click="event_toaid(descrebe.authorid)">{{ descrebe.authorid }}</td>
                 <td class="description">{{ descrebe.description }}</td>
             </tr>
         </table>
@@ -303,7 +303,7 @@ table.imagetable td{
     text-align: left;
     
 }
-.ids {
+.id1 {
     border-width: 1px;
     width: 8vw;
     height: 5vh;
@@ -311,6 +311,21 @@ table.imagetable td{
     border-style: solid;
     border-color: #999999;
     font-size: 2vw;
+}
+
+.id2 {
+    border-width: 1px;
+    width: 8vw;
+    height: 5vh;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 2vw;
+}
+
+.id2:hover{
+  text-decoration:underline;
+  cursor: pointer;
 }
 
 .description {
@@ -321,6 +336,11 @@ table.imagetable td{
     border-style: solid;
     border-color: #999999;
     font-size: 2vw;
+}
+
+.description:hover{
+  text-decoration:underline;
+  cursor: pointer;
 }
     
 </style>

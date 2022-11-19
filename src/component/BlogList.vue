@@ -63,13 +63,13 @@ function event_deleteblog(bid){
     <div class="blogbox">
         <table class="imagetable">
             <tr>
-                <th class="ids">博客id</th>
-                <th class="ids">作者id</th>
+                <th class="id1">博客id</th>
+                <th class="id1">作者id</th>
                 <th class="description">简介</th>
             </tr>
             <tr v-for=" blog in blog_list">
-                <td class="ids">{{ blog.id }}</td>
-                <td class="ids" @click="blog_detail(blog.authorid)">{{ blog.authorid }}</td>
+                <td class="id1">{{ blog.id }}</td>
+                <td class="id1" @click="blog_detail(blog.authorid)">{{ blog.authorid }}</td>
                 <td class="description">{{ blog.description }}
                 <button class="delete" @click="event_deleteblog(blog.id)">删除</button>
                 </td>
@@ -132,24 +132,44 @@ background: rgb(255, 245, 106);
 text-align: left;
 
 }
-.ids {
-border-width: 1px;
-width: 8vw;
-height: 5vh;
-padding: 8px;
-border-style: solid;
-border-color: #999999;
-font-size: 2vw;
+.id1 {
+    border-width: 1px;
+    width: 8vw;
+    height: 5vh;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 2vw;
+}
+
+.id2 {
+    border-width: 1px;
+    width: 8vw;
+    height: 5vh;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 2vw;
+}
+
+.id2:hover{
+  text-decoration:underline;
+  cursor: pointer;
 }
 
 .description {
-border-width: 1px;
-padding: 8px;
-width: 60vw;
-height: 5vh;
-border-style: solid;
-border-color: #999999;
-font-size: 2vw;
+    border-width: 1px;
+    padding: 8px;
+    width: 60vw;
+    height: 5vh;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 2vw;
+}
+
+.description:hover{
+  text-decoration:underline;
+  cursor: pointer;
 }
 
 .delete{
@@ -162,7 +182,7 @@ font-size: 2vw;
     background-color: rgba(251, 189, 5, 0.856);
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
-    font-size: 1.5vh;
+    font-size: 0.8vw;
 }
 
 button:hover {
