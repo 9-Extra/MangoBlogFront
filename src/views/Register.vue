@@ -75,22 +75,22 @@ function event_register_click() {
     
 
     api.post("/register", person_data).then(response => {
-        let data = response.data;
-        if (data.code != 0){
-            popup_message("注册失败: " + data.message, "error")
+        let datar = response.data;
+        if (datar.code != 0){
+            popup_message("注册失败: " + datar.message, "error")
         } else {
-            popup_message("注册成功 id:" + data.data, "success")
+            popup_message("注册成功 id:" + datar.data, "success")
             popup_message("正在登录", "success")
-            person_dataL.id = data.data
+            person_dataL.id = datar.data
 
         api.post("/login", person_dataL).then(response => {
         let data = response.data;
         if (data.code != 0){
             popup_message("登录失败: " + data.message, "error")
         } else {
-            let info: CodeInfo<LoginResponseData> = response.data;
+            let info: CodeInfo<string> = response.data;
             
-            token_util.set_token(info.data.token)
+            token_util.set_token(info.data)
 
             popup_message("登录成功", "success");
             router.push('/Blogs')

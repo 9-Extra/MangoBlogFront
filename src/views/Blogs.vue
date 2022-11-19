@@ -49,49 +49,49 @@ let pagenum = ref(1);
 let descriptions = reactive(
     [
   {
-    id:1,
-    description: "1",
-    authorid:1
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:2,
-    description: "2",
-    authorid:2
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:3,
-    description: "3",
-    authorid:3
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:4,
-    description: "4",
-    authorid:4
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:5,
-    description: "5",
-    authorid:5
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:6,
-    description: "6",
-    authorid:6
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:7,
-    description: "7",
-    authorid:7
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:8,
-    description: "8",
-    authorid:8
+    id:0,
+    description: "",
+    authorid:0
   },
   {
-    id:9,
-    description: "9",
-    authorid:9
+    id:0,
+    description: "",
+    authorid:0
   },])
 
 
@@ -126,28 +126,42 @@ let blogget:CodeInfo<BlogInfo>= reactive(
 )
 const router = useRouter();
 function event_toaid(auid:number){
-  router.push({name:"Page",params:{auid:auid}})
+  if(auid == 0){popup_message("不存在的用户" , "error")}
+  else router.push({name:"Page",params:{auid:auid}})
 }
 
 
 
 
-function event_download(){
+async function event_download(){
+let findnum = 0;
+let realnum = 1;
 
-  for (let index = 1; index <= 9; index++) {
-    let realindex = ((pagenum.value - 1)*9) + index
+for(let i = 1; i<=pagenum.value;i++){
+  if(i!=pagenum.value)popup_message("加载中,请稍后... " , "success")
 
-    api.get("/open/blog/?id="+realindex).then(response => {
-        
-        descriptions[index-1].authorid = response.data.data.authorid
-        descriptions[index-1].id = response.data.data.id
-        descriptions[index-1].description = response.data.data.description
-        
+  for (let index = 1; index <= 1000; index++) {
+
+    await api.get("/open/blog/?id="+realnum).then(response => {
+        if(response.data.code == 0){
+        descriptions[findnum].authorid = response.data.data.authorid
+        descriptions[findnum].id = response.data.data.id
+        descriptions[findnum].description = response.data.data.description
+        findnum++;
+        }
     }).catch(error => {
         popup_message("加载失败: " + error.message, "error")
     })
+
+    realnum++;
+    //console.log(realnum)
+    if(findnum > 8){
+      break;
+    }
     
   }
+  findnum = 0
+}
   
 }
 

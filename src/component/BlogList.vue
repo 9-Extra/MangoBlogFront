@@ -30,7 +30,6 @@ get_user_information().then(
         if (user != null) {
             api.get("/open/blogs/?id=" + user.id).then(response => {
                 blog_list.value = response.data.data
-                popup_message("加载成功", "success")
             }).catch(error => {
                 popup_message("加载失败: " + error.message, "error")
             })
@@ -50,10 +49,10 @@ function blog_detail(id) {
 function event_deleteblog(bid){
     postid.blog_id = bid;
     api.post("/post",postid).then(response => {
-        if(response.data.code != 200)popup_message("删除失败: " + response.data.message, "error")
-        else flash();
+        popup_message("删除成功" , "success")
+        flash();
     }).catch(error => {
-        popup_message("加载失败: " + error.message, "error")
+        popup_message("删除失败: " + error.message, "error")
     })
 
 }
@@ -164,6 +163,11 @@ font-size: 2vw;
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
     font-size: 1.5vh;
+}
+
+button:hover {
+    border: 1px solid rgba(255, 34, 56, 0.8);
+    background-color: rgba(255, 34, 56, 0.838);
 }
 </style>
   
