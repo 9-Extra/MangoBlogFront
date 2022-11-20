@@ -6,6 +6,7 @@ import { reactive } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
 import type { CodeInfo } from '@/utils/utils';
+import Collection from './Collection.vue';
 
 
 function event_logout_click(){
@@ -57,6 +58,10 @@ get_user_information().then(
     router.replace("/Login")
 })
 
+function tocollection(){
+    router.replace("/Collection")
+}
+
 </script>
 
 <template>
@@ -64,6 +69,7 @@ get_user_information().then(
     <body>
         <div class="titlebox">
             <h1>我的主页</h1>
+            <button @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
 
@@ -124,7 +130,7 @@ body {
 
 .titlebox {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     width: 30vw;
@@ -142,6 +148,21 @@ body {
     backdrop-filter: blur(10px);
 
 
+}
+
+.titlebox > button{
+    margin: 10px;
+    width: 5vw;
+    height: 4vh;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 0.8vw;
+
+    position: absolute;
+    margin-left: 60vw;
 }
 
 
@@ -171,7 +192,7 @@ h1 {
     font-size: 0.8vw;
 }
 
-.buttonbox>button:hover {
+button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
 }

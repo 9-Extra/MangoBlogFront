@@ -44,6 +44,8 @@
           <div class="details">
             <h5 @click="event_toaid(descrebe.authorid)">作者:{{ descrebe.nickname }}</h5>
             <h6>点击量:{{ descrebe.count }}</h6>
+            <button @click="collectit(descrebe.id)">⭐</button>
+            <h11  v-if="iscollectit(descrebe.id)">已收藏</h11>
           </div>
 
         </div>
@@ -56,7 +58,7 @@
 
       <div class="hots">
         <div class="title2">
-        <h10>当前热门</h10>
+        <h10>热门文章</h10>
       </div>
         <div class="ahot" v-for="hots in hot_list">
 
@@ -64,6 +66,8 @@
           <div class="details2">
             <h8 @click="event_toaid(hots.authorid)">作者:{{ hots.nickname }}</h8>
             <h9>点击量:{{ hots.count }}</h9>
+            <button @click="collectit(hots.id)">⭐</button>
+            <h12 v-if="iscollectit(hots.id)">已收藏</h12>
           </div>
         </div>
       </div>
@@ -148,8 +152,8 @@ async function findav() {
       popup_message("获取用户名失败: " + error.message, "error")
     })
 
-    if (hot_list.value[i].description.length > 50) {
-      hot_list.value[i].description = hot_list.value[i].description.slice(0, 50) + "..."
+    if (hot_list.value[i].description.length > 20) {
+      hot_list.value[i].description = hot_list.value[i].description.slice(0, 20) + "..."
     }
   }
 }
@@ -233,9 +237,68 @@ let names = ref("");
 
 
 
-function gethot() {
+async function likeit(bid){
+  await api.post("/collection/add?blogid="+bid).then(response => {
+    popup_message("收藏成功", "success")
+  }).catch(error => {
+    popup_message("操作失败: " + error.message, "error")
+  })
 
+  getcollect()
 }
+
+async function dislikeit(bid){
+  await api.post("/collection/delete?collectionid="+bid).then(response => {
+    popup_message("取消收藏成功", "success")
+  }).catch(error => {
+    popup_message("操作失败: " + error.message, "error")
+  })
+  getcollect()
+}
+
+interface collects {
+    blogid:number
+    userid:number
+}
+let collect_list: Ref<collects[]> = ref([])
+
+async function getcollect(){
+    await api.get("/collection").then(response => {
+            console.log(response.data.data)
+            collect_list.value = response.data.data
+        }).catch(error => {
+            popup_message("加载失败: " + error.message, "error")
+        })
+}
+
+function iscollectit(bid):boolean{
+  let iscollect : boolean = false
+  for(let i = 0; i < collect_list.value.length;i++){
+    if(collect_list.value[i].blogid == bid){
+      iscollect = true
+    }
+  }
+  return iscollect
+}
+getcollect();
+
+function collectit(bid){
+  getcollect();
+  let iscollect = ref(false)
+  for(let i = 0; i < collect_list.value.length;i++){
+    if(collect_list.value[i].blogid == bid){
+      iscollect.value = true
+    }
+  }
+  if(!iscollect.value){
+    likeit(bid);
+  }
+  else {
+    dislikeit(bid);
+  }
+}
+
+
 
 
 
@@ -390,6 +453,17 @@ h8:hover {
 
 }
 
+.details > button{
+  position: absolute;
+  margin-left: 50vw;
+  margin-bottom: 1vh;
+  font-size: 1vw;
+
+  border-radius: 10px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+}
+
 .details>h5 {
   margin-left: 1vw;
   font-size: 1vw;
@@ -402,7 +476,14 @@ h5:hover {
 
 .details>h6 {
   position: absolute;
-  margin-left: 40vw;
+  margin-left: 35vw;
+  font-size: 1vw;
+}
+
+.details > h11 {
+  position: absolute;
+  margin-left: 49vw;
+  margin-bottom: 10vh;
   font-size: 1vw;
 }
 
@@ -417,6 +498,17 @@ h5:hover {
   align-items: center;
 }
 
+.details2 > button{
+  position: absolute;
+  margin-left: 12vw;
+  margin-bottom: 15vh;
+  font-size: 0.8vw;
+
+  border-radius: 10px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+}
+
 .details2 > h8{
   margin-left: 0.1vw;
   font-size: 1vw;
@@ -425,6 +517,13 @@ h5:hover {
 .details2 > h9{
   position: absolute;
   margin-left: 8vw;
+  font-size: 1vw;
+}
+
+.details2 > h12{
+  position: absolute;
+  margin-left: 10vw;
+  margin-bottom: 7vh ;
   font-size: 1vw;
 }
 

@@ -15,6 +15,7 @@ const MySpace = () => import("../views/MySpace.vue");
 const Search = () => import("../views/Search.vue");
 const Prev2 = () => import("../views/Prev2.vue");
 const Prev1 = () => import("../views/Prev1.vue");
+const Collection = () => import("../views/Collection.vue");
 const routes = [
     {
         path: "/",
@@ -24,6 +25,11 @@ const routes = [
         path: "/Search/:seris/:searchin",
         name: "Search",
         component: Search,
+    },
+    {
+        path: "/Collection",
+        name: "Collection",
+        component: Collection,
     },
     {
         path: "/Prev2",

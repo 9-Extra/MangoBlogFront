@@ -7,7 +7,7 @@ let host = window.location.hostname; //主机
 let reg = /^localhost+/;
 let baseURL: string
 if(reg.test(host)) {
-    baseURL = 'http://192.168.1.102:8080';
+    baseURL = 'http://192.168.43.171:8080';
 } else {
     baseURL = protocol + "//" + host + ":8080";
 }
