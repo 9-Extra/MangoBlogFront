@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { ref, reactive , watch } from "vue"
-
+import popup_message from "../utils/message_popup";
 
 
 
@@ -44,6 +44,11 @@ let pagebtns = reactive([
 ])
 let currentPage = ref(1);
 
+function event_renew(){
+    currentPage.value = props.modelValue;
+    changeBtn(currentPage.value)
+}
+
 watch(() => props.modelValue, (newValue, oldValue) => {
   event_renew();
 })
@@ -53,10 +58,7 @@ watch(() => props.maxpage, (newValue, oldValue) => {
   maxp = props.maxpage
 })
 
-function event_renew(){
-    currentPage.value = props.modelValue;
-    changeBtn(currentPage.value)
-}
+
 
 
 function changeBtn1(){
@@ -89,7 +91,13 @@ function changeBtnpre(){
 
 }
 function changeBtn(page){
-    currentPage.value = page;
+    if(page <= maxp){
+        currentPage.value = page; 
+    }else{
+        currentPage.value = maxp;
+        popup_message("已为您跳到末页,后面没有了哦", "error"
+        )}
+
     if(currentPage.value >= 3 && currentPage.value <= maxp - 2){
         for (let index = 0; index < 5; index++) {
             pagebtns[index].num = currentPage.value - 2 + index;

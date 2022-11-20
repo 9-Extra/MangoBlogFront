@@ -25,12 +25,12 @@
       <table class="imagetable">
             <tr>
                 <th class="id1">博客id</th>
-                <th class="id2">作者id</th>
-                <th class="description">简介</th>
+                <th class="id2t">作者昵称</th>
+                <th class="descriptiont">简介</th>
             </tr>
-            <tr v-for="descrebe in descriptions">
+            <tr v-for="descrebe in now_list">
                 <td class="id1">{{ descrebe.id }}</td>
-                <td class="id2" @click="event_toaid(descrebe.authorid)">{{ descrebe.authorid }}</td>
+                <td class="id2" @click="event_toaid(descrebe.authorid)">{{ getnickname(descrebe.authorid) }}</td>
                 <td class="description" @click="event_open_blog_click(descrebe.id)">{{ descrebe.description }}</td>
             </tr>
         </table>
@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
-import { ref, reactive , watch, Text } from "vue"
+import { ref, reactive , watch, Text ,type Ref} from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import Pageswitch from "@/views/Pageswitch.vue";
@@ -61,85 +61,19 @@ let pagenum = ref(1);
 
 let searchcontent = ref("");
 
-
-let descriptions = reactive(
-    [
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },
-  {
-    id:undefined,
-    description: "",
-    authorid:undefined
-  },])
-
-
-
-
 interface BlogInfo {
     id:number
     authorid: number
     description: string
     content: string
-    status: number
+    statusauthor: number
+    statusadmin: number
 }
 
-interface CodeInfo<T> {
-    code:string
-    message: string
-    data : T
-}
+let blog_list: Ref<BlogInfo[]> = ref([])
 
-let blogget:CodeInfo<BlogInfo>= reactive(
-    {
-      code: "",
-      message: "",
-      data: {
-        id:0,
-        authorid: 0,
-        description: "",
-        content: "",
-        status: 0
-      }
-    }
-)
+let now_list: Ref<BlogInfo[]> = ref([])
+
 
 function event_open_blog_click(blog_id: number | undefined) {
   if(!blog_id){}
@@ -157,83 +91,36 @@ let pagemax = ref(0);
 let maxtext = "加载中"
 
 async function findav(){
-  let errorgiv = 0;
-  
-  for (let index = 1; index <= 200; index++) {
-
-  await api.get("/open/blog/?id="+index).then(response => {
-    if(response.data.code == 0){
-      availablenum++;
-    }
+  await api.get("/admin/approved").then(response => {
+    console.log(response)
+    blog_list.value = response.data.data
+    availablenum = blog_list.value.length 
     }).catch(error => {
-      if(errorgiv == 0){
       popup_message("加载失败: " + error.message, "error")
-      errorgiv = 1;
-      }
     })
-  }
+
   if(availablenum % 9 == 0){
     pagemax.value = Math.trunc((availablenum / 9))
   }
   else pagemax.value = Math.trunc((availablenum / 9)) + 1
-  
   maxtext = pagemax.value.toString();
-  event_download();
 }
 
 findav()
 
 
 
-async function event_download(){
-let findnum = 0;
-let realnum = 1;
-let errorgiv = 0;
-
-for(let i = 1; i<=pagenum.value;i++){
-  if(i!=pagenum.value && i==1)popup_message("加载中,请稍后... " , "success")
-
-  for (let index = 1; index <= 200; index++) {
-
-    await api.get("/open/blog/?id="+realnum).then(response => {
-        if(response.data.code == 0){
-          if(i == pagenum.value){
-          descriptions[findnum].authorid = response.data.data.authorid
-          descriptions[findnum].id = response.data.data.id
-          descriptions[findnum].description = response.data.data.description
-          }
-        findnum++;
-        }
+function event_download(){
+  api.get("/admin/approved").then(response => {
+    console.log(response)
+    now_list.value = response.data.data.slice((pagenum.value-1)*9,(pagenum.value)*9)
+    availablenum = blog_list.value.length 
     }).catch(error => {
-        if(errorgiv == 0){
-        popup_message("加载失败: " + error.message, "error")
-        errorgiv = 1;
-        }
+      popup_message("加载失败: " + error.message, "error")
     })
-
-    if(index == 200){
-      if(findnum==0){
-        popup_message("已到博客列表末尾,为您跳转至末页" , "error")
-        pagenum.value = pagemax.value;
-      }
-      for(;findnum<=8;findnum++){
-        descriptions[findnum].authorid = undefined
-        descriptions[findnum].id = undefined
-        descriptions[findnum].description = ""
-      }
-    }
-
-    realnum++;
-    //console.log(realnum)
-    if(findnum > 8){
-      break;
-    }
-    
-  }
-  findnum = 0
 }
   
-}
+
 
 event_download();//进入页面即调用
 
@@ -272,7 +159,15 @@ function to_prev1(){
   router.push("/Prev1")
 }
 
+async function getnickname(aid):Promise<string>{
+  await api.get("/user?id="+aid).then(response => {
+    return response.data.data.nickname
+  }).catch(error => {
+      popup_message("获取用户名失败: " + error.message, "error")
+    })
 
+    return "未知"
+}
 
 
 </script>
@@ -332,9 +227,6 @@ function to_prev1(){
         width: 100vw;
         height: 8vh;
         margin-top: 5vh;
-
-
-
     }
 
     input {
@@ -349,11 +241,10 @@ function to_prev1(){
     transition: 1s;
     outline: none;
     padding: 0 10px;
-}
+   }
 
   .search{
           position:relative;
-
           margin-left: 1vw;
           width: 4vw;
           height: 4vh;
@@ -363,7 +254,6 @@ function to_prev1(){
           color: rgba(2, 2, 0, 0.7);
           transition: 1s;
           font-size: 0.8vw;
-          
       }
 
       .owner{
@@ -410,8 +300,6 @@ background-color: rgba(255, 193, 85, 0.838);
         top: 6%;
         color: rgb(8, 7, 4);
         font-size: 2.5vw;
-
-        
     }
 
     h1 {
@@ -422,10 +310,8 @@ background-color: rgba(255, 193, 85, 0.838);
     }
     
     .blogbox {
-    
         justify-content: center;
         align-items: center;
-    
         margin: 1em;
     }
     
@@ -486,7 +372,7 @@ table.imagetable td{
     padding: 8px;
     border-style: solid;
     border-color: #999999;
-    font-size: 2vw;
+    font-size: 1.4vw;
 }
 
 .id2 {
@@ -496,12 +382,22 @@ table.imagetable td{
     padding: 8px;
     border-style: solid;
     border-color: #999999;
-    font-size: 2vw;
+    font-size: 1.4vw;
 }
 
 .id2:hover{
   text-decoration:underline;
   cursor: pointer;
+}
+
+.id2t {
+    border-width: 1px;
+    width: 8vw;
+    height: 5vh;
+    padding: 8px;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 1.4vw;
 }
 
 .description {
@@ -511,7 +407,16 @@ table.imagetable td{
     height: 5vh;
     border-style: solid;
     border-color: #999999;
-    font-size: 2vw;
+    font-size: 1.6vw;
+}
+.descriptiont {
+    border-width: 1px;
+    padding: 8px;
+    width: 60vw;
+    height: 5vh;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 1.6vw;
 }
 
 .description:hover{
