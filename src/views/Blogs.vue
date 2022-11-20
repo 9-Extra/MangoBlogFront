@@ -40,13 +40,16 @@
     </div>
     
   </div>
+  <div class="swichbox">
   <Pageswitch v-model:modelValue="pagenum" v-model:maxpage="pagemax"></Pageswitch>
+  <h1>最大页数:{{maxtext}}</h1>
+</div>
 </body>
 </template>
 
 <script setup lang="ts">
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
-import { ref, reactive , watch } from "vue"
+import { ref, reactive , watch, Text } from "vue"
 import api from "../utils/axios_blog";
 import popup_message from "../utils/message_popup";
 import Pageswitch from "@/views/Pageswitch.vue";
@@ -150,7 +153,9 @@ function event_toaid(auid:number|undefined){
 }
 
 let availablenum = 0;
-let pagemax = 0;
+let pagemax = ref(0);
+let maxtext = "加载中"
+
 async function findav(){
   let errorgiv = 0;
   
@@ -167,7 +172,13 @@ async function findav(){
       }
     })
   }
-  pagemax = Math.trunc((availablenum / 9)) + 1
+  if(availablenum % 9 == 0){
+    pagemax.value = Math.trunc((availablenum / 9))
+  }
+  else pagemax.value = Math.trunc((availablenum / 9)) + 1
+  
+  maxtext = pagemax.value.toString();
+  event_download();
 }
 
 findav()
@@ -203,7 +214,7 @@ for(let i = 1; i<=pagenum.value;i++){
     if(index == 200){
       if(findnum==0){
         popup_message("已到博客列表末尾,为您跳转至末页" , "error")
-        pagenum.value = pagemax;
+        pagenum.value = pagemax.value;
       }
       for(;findnum<=8;findnum++){
         descriptions[findnum].authorid = undefined
@@ -301,6 +312,18 @@ function to_prev1(){
         overflow-y: scroll; 
     } 
 
+    .swichbox{
+      margin-top: 1vh;
+      margin-left: 2vw;
+      width: 80vw;
+        height: 10vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        font-size: 1vw;
+    }
+
     .titlebox{
         display: flex;
         flex-direction:row;
@@ -370,6 +393,11 @@ function to_prev1(){
         font-size: 1vw;
     }
 
+    select:hover {
+border: 1px solid rgba(255, 215, 83, 0.8);
+background-color: rgba(255, 193, 85, 0.838);
+}
+
     button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
@@ -388,7 +416,7 @@ function to_prev1(){
 
     h1 {
         position:relative;
-        bottom: 10px;
+        margin-left: 1vw;
         color: rgb(13, 13, 12);
         font-size: 1vw;
     }

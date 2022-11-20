@@ -39,20 +39,17 @@ let blogs_list: Ref<ablog[]> = ref([])
 function event_search(tp){
     if(tp == 0){
         api.get("/admin/uninspected").then(response => {
-            console.log(response)
             blogs_list.value = response.data.data;
     })
     }
     else if(tp == 1){
         api.get("/admin/approved").then(response => {
-            console.log(response)
         blogs_list.value = response.data.data;
     })
     }
     else if(tp == 2){
         
         api.get("/admin/disapproved").then(response => {
-            console.log(response)
         blogs_list.value = response.data.data;
     })
     }
@@ -77,7 +74,7 @@ function allowit(tbid){
     posters.blog_id = tbid
     posters.operation = "agree"
     api.post("/post",posters).then(response => {
-        console.log(posters)
+        
         event_search(seris.value)
     }).catch(error => {
             popup_message("网络错误 " + error.message, "error")
@@ -89,6 +86,7 @@ function rejectit(tbid){
     posters.blog_id = tbid
     posters.operation = "revoke"
     api.post("/post",posters).then(response => {
+        console.log(response)
         event_search(seris.value)
     }).catch(error => {
             popup_message("网络错误 " + error.message, "error")
@@ -307,6 +305,11 @@ select{
         color: rgba(12, 14, 1, 0.7);
         transition: 1s;
         text-align: center;
-        font-size: 1vw;
+        font-size: 0.8vw;
     }
+
+    select:hover {
+border: 1px solid rgba(255, 235, 108, 0.8);
+background-color: rgba(254, 243, 113, 0.838);
+}
 </style>
