@@ -58,8 +58,10 @@ let blog: Blog = reactive({
     if (id == null) {
         await blog_new().then(
             response => {
+                
                 if (response.data.code != 0) {
                     error_exit("新建博客失败: " + response.data.message)
+                    console.log(response)
                 } else {
                     let id = response.data.data;
                     location.search = "?id=" + id; 

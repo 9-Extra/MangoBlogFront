@@ -9,7 +9,13 @@ import { useRouter } from 'vue-router'
 
 const route = useRouter();
 let paths = ref(route.currentRoute.value.path)
-let searchcontent = ref(paths.value.split("/",3)[2])
+let types = ref(paths.value.split("/",4)[2])
+let typenum = 0;
+if(types.value == "1"){
+    typenum = 1;
+}else typenum = 0;
+
+let searchcontent = ref(paths.value.split("/",4)[3])
 
 function backblogs(){
         route.push("/Blogs")   
@@ -33,27 +39,53 @@ interface Poster{
     _source:Blog
 }
 
+interface userses{
+    id:number
+    nickname:string
+    age:number
+    privilege:number
+}
+
 let blog_list: Ref<Poster[]> = ref([])
+let user_list: Ref<userses[]> = ref([])
 
 function event_open_blog_click(blog_id: number) {
     window.open("/blog_editor.html?id=" + blog_id)
 }
 
-function event_search(){
+function event_searchcontent(){
     api.get("/all/search?keyword="+searchcontent.value).then(response => {
     console.log(response)
     blog_list.value = response.data.hits.hits
     //blog_list = response
   })
 }
-event_search()
+
+function event_searchpeople(){
+    api.get("/getusers?nickname="+searchcontent.value).then(response => {
+    console.log(response)
+    user_list.value = response.data.data
+    //blog_list = response
+  })
+}
+
+if(types.value == "0"){
+    event_searchcontent()
+}else if(types.value == "1"){
+    event_searchpeople()
+}
+
 
 function event_toaid(auid:number|undefined){
   if(auid == 0 || !auid){popup_message("不存在的用户" , "error")}
   else route.push({name:"Page",params:{auid:auid}})
 }
 
-
+function level(prev:number):string{
+    if(prev == 2) return "网站拥有者"
+    else if(prev == 1) return "管理员"
+    else return "普通用户"
+}
 
 </script>
 
@@ -67,15 +99,26 @@ function event_toaid(auid:number|undefined){
         <div class="box">
             <div class="blogbox">
             <table class="imagetable">
-            <tr>
+            <tr  v-if="(typenum == 0)">
                 <th class="id1">博客id</th>
                 <th class="id1">作者id</th>
                 <th class="description">简介</th>
             </tr>
-            <tr class="blog_line" @click="event_open_blog_click(blog._source.id)" v-for=" blog in blog_list">
+            <tr  v-if="(typenum == 1)">
+                <th class="id1">用户id</th>
+                <th class="id1">用户昵称</th>
+                <th class="levels">用户权限等级</th>
+            </tr>
+            <tr class="blog_line"  v-for=" blog in blog_list"  v-if="(typenum == 0)">
                 <td class="id1">{{ blog._source.id }}</td>
                 <td class="id2" @click="event_toaid(blog._source.authorid)">{{ blog._source.authorid }}</td>
                 <td class="description" @click="event_open_blog_click(blog._source.id)">{{ blog._source.description }}
+                </td>
+            </tr>
+            <tr class="blog_line"  v-for=" auser in user_list"  v-if="(typenum == 1)">
+                <td class="id2" @click="event_toaid(auser.id)">{{ auser.id }}</td>
+                <td class="id2" @click="event_toaid(auser.id)">{{ auser.nickname }}</td>
+                <td class="levels">{{ level(auser.privilege)}}
                 </td>
             </tr>
         </table>
@@ -190,27 +233,28 @@ background: rgba(255, 174, 52, 0.724)
 
 table.imagetable td {
 background: rgb(255, 245, 106);
-text-align: left;
 
 }
 .id1 {
 border-width: 1px;
-width: 8vw;
+width: 12vw;
 height: 5vh;
 padding: 8px;
 border-style: solid;
 border-color: #999999;
 font-size: 2vw;
+text-align: left;
 }
 
 .id2 {
 border-width: 1px;
-width: 8vw;
+width: 12vw;
 height: 5vh;
 padding: 8px;
 border-style: solid;
 border-color: #999999;
 font-size: 2vw;
+text-align: left;
 }
 
 .id2:hover{
@@ -221,16 +265,28 @@ cursor: pointer;
 .description {
 border-width: 1px;
 padding: 8px;
-width: 60vw;
+width: 50vw;
 height: 5vh;
 border-style: solid;
 border-color: #999999;
 font-size: 2vw;
+text-align: left;
 }
 
 .description:hover{
 text-decoration:underline;
 cursor: pointer;
+}
+
+.levels {
+border-width: 1px;
+padding: 8px;
+width: 50vw;
+height: 5vh;
+border-style: solid;
+border-color: #999999;
+font-size: 2vw;
+text-align: center  ;
 }
 
 .delete{
@@ -252,7 +308,5 @@ border: 1px solid rgba(255, 34, 56, 0.8);
 background-color: rgba(255, 34, 56, 0.838);
 }
 
-.blog_line {
-cursor: pointer;
-}
+
 </style>

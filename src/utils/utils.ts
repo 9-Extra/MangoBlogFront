@@ -37,7 +37,7 @@ export function blog_new(){
         blog_id: 0,
         operation: BLOG_OPERATION.NEW
     }
-
+    console.log(op)
     return api.post("/post", op);
 }
 

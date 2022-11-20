@@ -9,6 +9,8 @@ interface Blog {
     authorid: number
     description: string
     content: string
+    statusadmin: number
+    statusauthor: number
 }
 
 interface idandaid {
@@ -40,6 +42,14 @@ function flash() {
 
 flash();
 
+function statuses(sadmin:number,sauthor:number):string{
+    if(sauthor == 0)return "草稿"
+    else if(sauthor == 1 && sadmin == -1)return "审核中"
+    else if (sauthor == 1 && sadmin == 0)return "审核不通过"
+    else if(sauthor == 1 && sadmin == 1)return "已发布"
+    else return "空白草稿"
+}
+
 function blog_detail(id) {
 
 
@@ -52,6 +62,7 @@ function event_open_blog_click(blog_id: number) {
 
 function event_deleteblog(bid) {
     postid.blog_id = bid;
+    postid.operation = "delete";
     api.post("/post", postid).then(response => {
         popup_message("删除成功", "success")
         flash();
@@ -59,6 +70,21 @@ function event_deleteblog(bid) {
         popup_message("删除失败: " + error.message, "error")
     })
 
+}
+
+function event_fabu(bid){
+    postid.blog_id = bid;
+    postid.operation = "post";
+    api.post("/post",postid).then(response => {
+        popup_message("发布成功", "success")
+        flash();
+    }).catch(error => {
+        popup_message("发布失败: " + error.message, "error")
+    })
+}
+
+function event_exchange(bid){
+    
 }
 
 </script>
@@ -70,12 +96,17 @@ function event_deleteblog(bid) {
                 <th class="id1">博客id</th>
                 <th class="id1">作者id</th>
                 <th class="description">简介</th>
+                <th class="statuses">状态</th>
             </tr>
             <tr class="blog_line" @click="event_open_blog_click(blog.id)" v-for=" blog in blog_list">
                 <td class="id1">{{ blog.id }}</td>
                 <td class="id1" @click="blog_detail(blog.authorid)">{{ blog.authorid }}</td>
                 <td class="description">{{ blog.description }}
                     <button class="delete" @click.stop="event_deleteblog(blog.id)">删除</button>
+                </td>
+                <td class="statuses" @click="blog_detail(blog.authorid)">{{ statuses(blog.statusadmin,blog.statusauthor) }}
+                    <button class="delete" @click.stop="event_fabu(blog.id)" v-if="(blog.statusauthor == 0)">发布</button>
+                    <button class="renew" @click.stop="event_exchange(blog.id)" v-if="(blog.statusauthor == 1 && blog.statusadmin != -1)">修改并重新发布</button>
                 </td>
             </tr>
         </table>
@@ -164,7 +195,7 @@ table.imagetable td {
 .description {
     border-width: 1px;
     padding: 8px;
-    width: 60vw;
+    width: 40vw;
     height: 5vh;
     border-style: solid;
     border-color: #999999;
@@ -176,11 +207,37 @@ table.imagetable td {
   cursor: pointer;
 }
 
+.statuses {
+    border-width: 1px;
+    padding: 8px;
+    width: 20vw;
+    height: 5vh;
+    border-style: solid;
+    border-color: #999999;
+    font-size: 2vw;
+}
+
+
+
 .delete{
     cursor: pointer;
     float:right;
     margin: 10px;
     width: 5vw;
+    height: 4vh;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 0.8vw;
+}
+
+.renew{
+    cursor: pointer;
+    float:right;
+    margin: 10px;
+    width: 7vw;
     height: 4vh;
     border-radius: 20px;
     border: 1px solid rgba(56, 20, 15, 0.5);

@@ -231,7 +231,10 @@ watch(() => pagenum.value, (newValue, oldValue) => {
 })
 
 function event_search(){
-  router.push({name:"Search",params:{searchin:searchcontent.value}})
+  router.push({name:"Search",params:{
+    seris:seris.value,
+    searchin:searchcontent.value
+  }})
   
 }
 

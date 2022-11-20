@@ -70,9 +70,11 @@ function levelup(id){
             <tr>
                 <th class="id2">博客id</th>
                 <th class="id2">用户id</th>
-                <th class="description">题目</th>
+                <th class="id2">用户昵称</th>
+                <th class="description">主题</th>
             </tr>
             <tr class="blog_line" v-for=" useri in users_list">
+                <td class="id2" @click="event_toaid(useri.id)">{{ useri.id }}</td>
                 <td class="id2" @click="event_toaid(useri.id)">{{ useri.id }}</td>
                 <td class="id2" @click="event_toaid(useri.id)">{{ useri.nickname }}</td>
                 <td class="description" >{{level(useri.privilege) }}

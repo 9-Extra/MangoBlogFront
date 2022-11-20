@@ -21,7 +21,7 @@ const routes = [
         redirect: "/Me"
     },
     {
-        path: "/Search/:searchin",
+        path: "/Search/:seris/:searchin",
         name: "Search",
         component: Search,
     },
