@@ -11,6 +11,7 @@ export function upload_flie(file, interface_url: string, progress?: Ref<number>)
         headers: {
             'Content-Type':'multipart/form-data'
         },
+        timeout: 60 * 1000, //60s
         transformRequest: [function (data) {
             return data
         }],
