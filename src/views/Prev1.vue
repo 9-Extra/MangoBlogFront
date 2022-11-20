@@ -6,28 +6,29 @@ import BlogList from '@/component/BlogList.vue';
 import { ref, reactive, type Ref } from "vue"
 import api from "@/utils/axios_blog";
 import { useRouter } from 'vue-router'
-
+let seris = ref(0);//0代表拒绝发布 1代表已发布
 const route = useRouter();
 
 function backblogs(){
         route.go(-1)   
 }
 
-interface auser {
+interface ablog {
     id: number
-    nickname: string
-    age: number
-    password: string
-    privilege:number
+    authorid: number
+    description: string
+    content: string
+    statusauthor: number
+    statusadmin: number
 }
 
 
-let users_list: Ref<auser[]> = ref([])
+let blogs_list: Ref<ablog[]> = ref([])
 
 
 function event_search(){
     api.get("/users").then(response => {
-        users_list.value = response.data;
+        blogs_list.value = response.data;
     })
 }
 event_search()
@@ -43,17 +44,13 @@ function level(prev:number):string{
     else return "普通用户"
 }
 
-function leveldown(id){
-    api.post("/degrade?id="+id).then(response => {
+function statuchange(){
+    api.post("/degrade?id=").then(response => {
         event_search()
     })
 }
 
-function levelup(id){
-    api.post("/upgrade?id="+id).then(response => {
-        event_search()
-    })
-}
+
 
 </script>
 
@@ -63,6 +60,11 @@ function levelup(id){
         <div class="titlebox">
             <button class="returnbox" @click="backblogs">返回</button>
             <h1>用户列表</h1>
+
+            <select v-model="seris">
+            <option value="0">文章</option>
+            <option value="1">用户</option>
+            </select>
         </div>
         <div class="box">
             <div class="blogbox">
@@ -70,16 +72,14 @@ function levelup(id){
             <tr>
                 <th class="id2">博客id</th>
                 <th class="id2">用户id</th>
-                <th class="id2">用户昵称</th>
                 <th class="description">主题</th>
             </tr>
-            <tr class="blog_line" v-for=" useri in users_list">
-                <td class="id2" @click="event_toaid(useri.id)">{{ useri.id }}</td>
-                <td class="id2" @click="event_toaid(useri.id)">{{ useri.id }}</td>
-                <td class="id2" @click="event_toaid(useri.id)">{{ useri.nickname }}</td>
-                <td class="description" >{{level(useri.privilege) }}
-                    <button class="delete"  @click="leveldown(useri.id)">通过</button>
-                    <button class="delete"  @click="levelup(useri.id)">拒绝</button>
+            <tr class="blog_line" v-for=" blg in blogs_list">
+                <td class="id2">{{ blg.id }}</td>
+                <td class="id2" @click="event_toaid(blg.authorid)">{{ blg.authorid }}</td>
+                <td class="description" >{{blg.description }}
+                    <button class="delete"  @click="statuchange" v-if="blg.statusadmin == 0">通过</button>
+                    <button class="delete"  @click="statuchange" v-if="blg.statusadmin == 1">拒绝</button>
                 </td>
                 
             </tr>
@@ -145,7 +145,7 @@ margin: 1em;
 .titlebox > h1 {
         position:relative;
         margin-top: 0.1vh;
-        margin-right: 28vw;
+        margin-right: 23vw;
         color: rgb(8, 7, 4);
         font-size: 2vw;
     }
@@ -210,7 +210,7 @@ font-size: 2vw;
 
 .id2 {
 border-width: 1px;
-width: 12vw;
+width: 9vw;
 height: 5vh;
 padding: 8px;
 border-style: solid;
@@ -226,7 +226,7 @@ cursor: pointer;
 .description {
 border-width: 1px;
 padding: 8px;
-width: 40vw;
+width: 55vw;
 height: 5vh;
 border-style: solid;
 border-color: #999999;
@@ -253,5 +253,16 @@ border: 1px solid rgba(255, 34, 56, 0.8);
 background-color: rgba(255, 34, 56, 0.838);
 }
 
+select{
 
+        width: 6vw;
+        height: 4vh;
+        border-radius: 20px;
+        border: 1px solid rgba(123, 2, 24, 0.5);
+        background-color: rgba(241, 120, 142, 0.4);
+        color: rgba(12, 14, 1, 0.7);
+        transition: 1s;
+        text-align: center;
+        font-size: 1vw;
+    }
 </style>
