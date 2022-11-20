@@ -176,7 +176,5 @@ h1 {
     background-color: rgba(255, 34, 56, 0.838);
 }
 
-#upload_file_id{
 
-}
 </style>

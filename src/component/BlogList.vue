@@ -50,11 +50,6 @@ function statuses(sadmin:number,sauthor:number):string{
     else return "空白草稿"
 }
 
-function blog_detail(id) {
-
-
-
-}
 
 function event_open_blog_click(blog_id: number) {
     window.open("/blog_editor.html?id=" + blog_id)
@@ -98,13 +93,13 @@ function event_exchange(bid){
                 <th class="description">简介</th>
                 <th class="statuses">状态</th>
             </tr>
-            <tr class="blog_line" @click="event_open_blog_click(blog.id)" v-for=" blog in blog_list">
+            <tr class="blog_line"  v-for=" blog in blog_list">
                 <td class="id1">{{ blog.id }}</td>
-                <td class="id1" @click="blog_detail(blog.authorid)">{{ blog.authorid }}</td>
-                <td class="description">{{ blog.description }}
+                <td class="id1">{{ blog.authorid }}</td>
+                <td class="description" @click="event_open_blog_click(blog.id)">{{ blog.description }}
                     <button class="delete" @click.stop="event_deleteblog(blog.id)">删除</button>
                 </td>
-                <td class="statuses" @click="blog_detail(blog.authorid)">{{ statuses(blog.statusadmin,blog.statusauthor) }}
+                <td class="statuses">{{ statuses(blog.statusadmin,blog.statusauthor) }}
                     <button class="delete" @click.stop="event_fabu(blog.id)" v-if="(blog.statusauthor == 0)">发布</button>
                     <button class="renew" @click.stop="event_exchange(blog.id)" v-if="(blog.statusauthor == 1 && blog.statusadmin != -1)">修改并重新发布</button>
                 </td>
