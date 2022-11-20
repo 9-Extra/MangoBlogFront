@@ -11,13 +11,11 @@ export interface User{
 }
 
 export function get_user_information(): Promise<User> {
-    let user: User | null = null;
-
     return api.post("/me").then(response => {
         if (response.data.code != 0){
             throw new Error(response.data.message);
         }    
-        user = response.data.data;
+        return response.data.data;
     }).catch(
         err => {
             return err;
