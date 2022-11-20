@@ -4,7 +4,7 @@ import 'mavon-editor/dist/css/index.css'
 import { reactive, ref, type Ref } from "vue"
 import { upload_flie } from "@/utils/file_util";
 import popup_message from "@/utils/message_popup";
-import { blog_edit, blog_modify, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
+import { blog_edit, blog_post, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
 import api from "@/utils/axios_blog";
 
 const md = ref(null) as Ref<any>//获取的editor子组件对象
@@ -137,13 +137,13 @@ function event_edit_click() {
 }
 
 function event_post_click(){
-    blog_modify(blog.id, 1).then(
+    blog_post(blog.id).then(
         response => {
             let result = response.data as CodeInfo<number>
             if (result.code != 0){
                 popup_message("发布出错: " + result.message, "error");
             } else {
-                popup_message("发布成功", "error");
+                popup_message("发布成功", "success");
             }
         }
     ).catch(
