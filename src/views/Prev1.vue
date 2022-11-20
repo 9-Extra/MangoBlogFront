@@ -3,7 +3,7 @@ import { get_user_information } from '@/utils/user_util';
 import token_util from "@/utils/token_util";
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
-import { ref, reactive, type Ref } from "vue"
+import { ref, reactive, type Ref, watch } from "vue"
 import api from "@/utils/axios_blog";
 import { useRouter } from 'vue-router'
 let seris = ref(0);//0代表拒绝发布 1代表已发布
@@ -22,16 +22,45 @@ interface ablog {
     statusadmin: number
 }
 
+interface op {
+    operation: string
+    blog_id: number
+}
+
+
+let posters:op = {
+    operation : "",
+    blog_id : 0  
+}
 
 let blogs_list: Ref<ablog[]> = ref([])
 
 
-function event_search(){
-    api.get("/users").then(response => {
-        blogs_list.value = response.data;
+function event_search(tp){
+    if(tp == 0){
+        api.get("/admin/uninspected").then(response => {
+            console.log(response)
+            blogs_list.value = response.data.data;
     })
+    }
+    else if(tp == 1){
+        api.get("/admin/approved").then(response => {
+            console.log(response)
+        blogs_list.value = response.data.data;
+    })
+    }
+    else if(tp == 2){
+        
+        api.get("/admin/disapproved").then(response => {
+            console.log(response)
+        blogs_list.value = response.data.data;
+    })
+    }
 }
-event_search()
+event_search(seris.value);
+watch(() => seris.value, (newValue, oldValue) => {
+    event_search(seris.value);
+})
 
 function event_toaid(auid:number|undefined){
   if(auid == 0 || !auid){popup_message("不存在的用户" , "error")}
@@ -44,13 +73,27 @@ function level(prev:number):string{
     else return "普通用户"
 }
 
-function statuchange(){
-    api.post("/degrade?id=").then(response => {
-        event_search()
-    })
+function allowit(tbid){
+    posters.blog_id = tbid
+    posters.operation = "agree"
+    api.post("/post",posters).then(response => {
+        console.log(posters)
+        event_search(seris.value)
+    }).catch(error => {
+            popup_message("网络错误 " + error.message, "error")
+
+        })
 }
 
-
+function rejectit(tbid){
+    posters.blog_id = tbid
+    posters.operation = "revoke"
+    api.post("/post",posters).then(response => {
+        event_search(seris.value)
+    }).catch(error => {
+            popup_message("网络错误 " + error.message, "error")
+        })
+}
 
 </script>
 
@@ -62,8 +105,9 @@ function statuchange(){
             <h1>用户列表</h1>
 
             <select v-model="seris">
-            <option value="0">文章</option>
-            <option value="1">用户</option>
+            <option value="0">未审核</option>
+            <option value="1">已通过</option>
+            <option value="2">已拒绝</option>
             </select>
         </div>
         <div class="box">
@@ -78,8 +122,8 @@ function statuchange(){
                 <td class="id2">{{ blg.id }}</td>
                 <td class="id2" @click="event_toaid(blg.authorid)">{{ blg.authorid }}</td>
                 <td class="description" >{{blg.description }}
-                    <button class="delete"  @click="statuchange" v-if="blg.statusadmin == 0">通过</button>
-                    <button class="delete"  @click="statuchange" v-if="blg.statusadmin == 1">拒绝</button>
+                    <button class="delete"  @click="allowit(blg.id)" v-if="seris == 0 || seris == 2">通过</button>
+                    <button class="delete"  @click="rejectit(blg.id)" v-if="seris == 0 || seris == 1">拒绝</button>
                 </td>
                 
             </tr>
