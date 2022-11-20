@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import HeadImageVue from '@/component/HeadImage.vue';
 </script>
 
 <template>
@@ -24,8 +24,8 @@
                 </li>
             </router-link>
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
-                <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
-                    <a :href="href">个人主页</a>
+                <li id="head_image" :class="[isExactActive && 'router-link-exact-active']" @click="navigate">
+                    <head-image-vue/>
                 </li>
             </router-link>
         </ul>
@@ -55,6 +55,7 @@
 .header>ul>li {
     float: right;
     height: 5vh;
+    cursor: pointer;
 
     transition: 0.3s;
 
@@ -91,6 +92,14 @@
 
 .header>ul>li:hover>a {
     color: white;
+}
+
+#head_image {
+    padding-top: 0px;
+    float: left
+}
+#head_image:hover {
+    background-color: inherit;
 }
 </style>
 

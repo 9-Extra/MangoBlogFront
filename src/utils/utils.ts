@@ -19,12 +19,10 @@ export const enum BLOG_OPERATION {
     POST = "post",
     EDIT = "edit",
     DELETE = "delete",
-    REVODE = "revoke"
+    REVODK = "revoke"
 }
 interface BlogOperation{
     blog_id: number;
-    status?: number;
-
     description?: string;
     content?: string;
 
@@ -41,12 +39,11 @@ export function blog_new(){
     return api.post("/post", op);
 }
 
-//修改博客的状态
-export function blog_modify(blog_id: number, status: number){
+//发布博客
+export function blog_post(blog_id: number){
     let op: BlogOperation = {
         blog_id,
-        status,
-        operation: BLOG_OPERATION.REVODE
+        operation: BLOG_OPERATION.POST
     }
 
     return api.post("/post", op);
