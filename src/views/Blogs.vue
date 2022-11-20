@@ -113,7 +113,7 @@ let hot_list: Ref<BlogInfo[]> = ref([])
 
 function event_open_blog_click(blog_id: number | undefined) {
   if (!blog_id) { }
-  else window.open("/blog_editor.html?id=" + blog_id)
+  else window.open("/blog_view.html?id=" + blog_id)
 }
 
 const router = useRouter();

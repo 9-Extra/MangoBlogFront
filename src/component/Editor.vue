@@ -131,7 +131,7 @@ watch(() => blog.description, (newValue, oldValue) => {
                     console.log(response)
                 } else {
                     let id = response.data.data;
-                    location.search = "?id=" + id;
+                    history.replaceState({}, document.title, "?id=" + id)
                     blog.id = id;
                 }
             }

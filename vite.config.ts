@@ -16,7 +16,8 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, 'index.html'),
-                login: resolve(__dirname, 'blog_editor.html')
+                editor: resolve(__dirname, 'blog_editor.html'),
+                viewer: resolve(__dirname, 'blog_view.html')
             }
         }
     }
