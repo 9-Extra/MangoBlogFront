@@ -9,7 +9,7 @@ let baseURL: string
 if(reg.test(host)) {
     baseURL = 'http://192.168.1.102:8080';
 } else {
-    baseURL = 'http://192.168.1.102:8080'//protocol + "//" + host + ":8080";
+    baseURL = protocol + "//" + host + ":8080";
 }
 
 console.log(baseURL)

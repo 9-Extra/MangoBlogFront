@@ -1,15 +1,36 @@
 <script setup lang="ts">
-import { get_user_information, type User } from '@/utils/user_util';
+import { get_user_information, upload_head_image, type User } from '@/utils/user_util';
 import token_util from "@/utils/token_util";
 import router from '@/router';
 import { reactive } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
+import type { CodeInfo } from '@/utils/utils';
 
 
 function event_logout_click(){
     token_util.set_token(null);
     router.push("/Login")
+}
+
+function event_upload_profile_click(){
+    let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
+    if (files && files.length > 0){
+        upload_head_image(files[0]).then(
+            response => {
+                let result: CodeInfo<null> = response.data
+                if (result.code != 0){
+                    popup_message("上传头像失败: " + result.message, "error")
+                } else {
+                    router.go(0)//刷新页面
+                }
+            }
+        ).catch(err => {
+            popup_message("上传头像失败: " + err.message, "error")
+        })
+    } else {
+        popup_message("文件无效", "error")
+    }
 }
 
 if (!token_util.get_token()) {
@@ -19,7 +40,7 @@ if (!token_util.get_token()) {
 let user: User = reactive({
     id: 0,
     nickname: '',
-    head_image: '',
+    headImageUrl: '',
     privilege: ''
 })
 
@@ -27,7 +48,7 @@ get_user_information().then(
     user_rep => {
         user.id = user_rep.id
         user.nickname = user_rep.nickname
-        user.head_image = user_rep.head_image
+        user.headImageUrl = user_rep.headImageUrl
         user.privilege = user_rep.privilege
     }
 )
@@ -49,8 +70,10 @@ get_user_information().then(
             <BlogList id="list_continer"></BlogList>
 
         </div>
-        <div class="buttonbox" @click="event_logout_click">
-            <button>退出登录</button>
+        <div class="buttonbox">
+            <button @click="event_logout_click">退出登录</button>
+            <input accept="image/*" type="file" id="upload_file_id" />
+            <button @click="event_upload_profile_click">更改头像</button>
         </div>
     </body>
 </template>
@@ -151,5 +174,9 @@ h1 {
 .buttonbox>button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
+}
+
+#upload_file_id{
+
 }
 </style>
