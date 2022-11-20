@@ -23,7 +23,7 @@ let user: User = reactive({
     privilege: ''
 })
 
-await get_user_information().then(
+get_user_information().then(
     user_rep => {
         user.id = user_rep.id
         user.nickname = user_rep.nickname

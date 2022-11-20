@@ -4,7 +4,7 @@ import 'mavon-editor/dist/css/index.css'
 import { reactive, ref, type Ref } from "vue"
 import { upload_flie } from "@/utils/file_util";
 import popup_message from "@/utils/message_popup";
-import { blog_edit, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
+import { blog_edit, blog_modify, blog_new, get_blog_content, type Blog, type CodeInfo } from "@/utils/utils"
 import api from "@/utils/axios_blog";
 
 const md = ref(null) as Ref<any>//获取的editor子组件对象
@@ -118,7 +118,7 @@ function event_file_upload_click() {
 
 }
 
-function event_post_click() {
+function event_edit_click() {
     blog_edit(blog.id, "默认描述", blog.content).then(
         response => {
             let result = response.data as CodeInfo<number>
@@ -132,7 +132,23 @@ function event_post_click() {
     ).catch(err => {
         popup_message("提交出错", "error");
     });
+}
 
+function event_post_click(){
+    blog_modify(blog.id, 1).then(
+        response => {
+            let result = response.data as CodeInfo<number>
+            if (result.code != 0){
+                popup_message("发布出错: " + result.message, "error");
+            } else {
+                popup_message("发布成功", "error");
+            }
+        }
+    ).catch(
+        err => {
+            popup_message("后端出错: " + err.message, "error");
+        }
+    );
 }
 
 </script>
@@ -143,6 +159,7 @@ function event_post_click() {
         <button @click=event_file_upload_click>上传</button>
         <progress v-if=is_uploading :value=upload_process max=1.0></progress>
         <editor.mavonEditor ref ="md" @imgAdd=img_add @imgDel=img_del v-model="blog.content" />
+        <button @click=event_edit_click>保存</button>
         <button @click=event_post_click>发布</button>
     </div>
 </template>
