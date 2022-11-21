@@ -10,7 +10,7 @@
                 <h2>昵称:</h2>
                 <h3>{{user.nickname}}</h3>
                 <div class="input-box">
-                    <input class="" type="password" placeholder="请输入想要修改的昵称" v-model=nameipas.nickname />
+                    <input class="" type="text" placeholder="请输入想要修改的昵称" v-model=nameipas.nickname />
                 </div>
                 <button @click="sendname">修改</button>
             </div>
@@ -18,7 +18,7 @@
                 <h2>年龄:</h2>
                 <h3>{{user.age}}</h3>
                 <div class="input-box">
-                    <input class="" type="password" placeholder="请输入想要修改的年龄" v-model=ageipas.age />
+                    <input class="" type="text" placeholder="请输入想要修改的年龄" v-model=ageipas.age />
                 </div>
                 <button @click="sendage">修改</button>
             </div>
@@ -46,8 +46,18 @@
                 </div>
 
                 </div>
-                <button @click="sendnew">修改密码</button>
+                <button @click="showconf">修改密码</button>
             </div>
+            <div class="fugai" v-show="showconfirm">
+                    <div class="confirm">
+                    <c1>确定要修改密码吗?</c1>
+                    <div class="bt2s">
+                        <button @click="yesdelete">确定</button>
+                        <button @click="nodelete">取消</button>
+                    </div>
+
+                    </div>
+                    </div>
         </div>
         
             
@@ -63,7 +73,7 @@
 import { get_user_information, upload_head_image, type User } from '@/utils/user_util';
 import token_util from "@/utils/token_util";
 import router from '@/router';
-import { reactive } from 'vue';
+import { ref, reactive, type Ref } from "vue"
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
 import type { CodeInfo } from '@/utils/utils';
@@ -98,12 +108,47 @@ let ageipas:agei = reactive({
     age:""
 })
 
+function flashpage(){
+get_user_information().then(
+    user_rep => {
+        user.id = user_rep.id
+        user.nickname = user_rep.nickname
+        user.age = user_rep.age
+        user.headImageUrl = user_rep.headImageUrl
+        user.privilege = user_rep.privilege
+    }
+)
+.catch(err => {
+    popup_message("后端异常: " + err.message, "error")
+    router.replace("/Login")
+})
+}
+
+flashpage()
+
+let showconfirm = ref(false)
+function showconf(){
+    showconfirm.value = true;
+}
+
+function yesdelete(thisbid){
+    sendnew();
+    showconfirm.value = false;
+}
+
+function nodelete(){
+    showconfirm.value = false;
+}
+
 function sendname(){
     let name_data:namei={
         nickname: nameipas.nickname
     }
     api.post("/nickname/edit",name_data).then(response => {
-        popup_message("修改成功", "success");  
+        if(response.data.code == 0){
+        popup_message("修改成功", "success"); 
+        router.go(0) }
+        else popup_message("修改失败: " + response.data.message, "error")
     }).catch(error => {
         popup_message("修改失败: " + error.message, "error")
     })
@@ -114,7 +159,10 @@ function sendage(){
         age: ageipas.age
     }
     api.post("/age/edit",age_data).then(response => {
-        popup_message("修改成功", "success");  
+        if(response.data.code == 0){
+        popup_message("修改成功", "success");
+        router.go(0); }
+        else popup_message("修改失败: " + response.data.message, "error")
     }).catch(error => {
         popup_message("修改失败: " + error.message, "error")
     })
@@ -122,12 +170,19 @@ function sendage(){
 
 function sendnew(){
     let pas_data: nandold = {
-        old_password: sendpas.new_password,
-        new_password: sendpas.old_password
+        old_password: sendpas.old_password,
+        new_password: sendpas.new_password
     }
 
     api.post("/password/edit",pas_data).then(response => {
+        //console.log(response)
+        if(response.data.code == 0){
+        
         popup_message("修改成功", "success");  
+        router.go(0)
+    }
+        else{popup_message("修改失败: " + response.data.message, "error")}
+        
     }).catch(error => {
         popup_message("修改失败: " + error.message, "error")
     })
@@ -175,19 +230,7 @@ let user: User = reactive({
     privilege: ''
 })
 
-get_user_information().then(
-    user_rep => {
-        user.id = user_rep.id
-        user.nickname = user_rep.nickname
-        user.age = user_rep.age
-        user.headImageUrl = user_rep.headImageUrl
-        user.privilege = user_rep.privilege
-    }
-)
-.catch(err => {
-    popup_message("后端异常: " + err.message, "error")
-    router.replace("/Login")
-})
+
 
 
 </script>
@@ -235,6 +278,58 @@ body {
     backdrop-filter: blur(10px);
 
 
+}
+
+.fugai{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+.confirm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top:20%;
+    width: 25vw;
+    height: 30vh;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+
+    background-color: rgb(255, 200, 112);
+}
+
+.confirm > c1{
+    margin-top: 10vh;
+    font-size: 2vw;
+}
+
+.bt2s{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+}
+
+.bt2s > button{
+    width: 10vw;
+    height: 6vh;
+    margin: 5vw;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 1vw;
 }
 .namebox{
     margin-top: 6vh;

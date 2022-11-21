@@ -54,6 +54,8 @@ function todetailchange(){
             <button class="bt2" @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
+            
+            
 
             <BlogList id="list_continer"></BlogList>
 
@@ -99,6 +101,8 @@ body {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
 
+    background-color: rgb(255, 208, 0);
+
     backdrop-filter: blur(10px);
 
     overflow: hidden;
@@ -126,6 +130,7 @@ body {
 
 
 }
+
 
 .bt2{
     margin: 10px;
@@ -195,6 +200,9 @@ button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
 }
+
+
+  /* 确认弹框 end */
 
 
 </style>

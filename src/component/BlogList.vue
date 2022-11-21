@@ -89,10 +89,38 @@ function event_exchange(bid){
     
 }
 
+let wantdelete = ref(0)
+let showconfirm = ref(false)
+
+
+function showconf(thisbid){
+    showconfirm.value = true;
+    wantdelete.value = thisbid;
+}
+
+function yesdelete(thisbid){
+    event_deleteblog(thisbid);
+    showconfirm.value = false;
+}
+
+function nodelete(){
+    showconfirm.value = false;
+}
+
 </script>
 
 <template>
     <div class="blogbox">
+        <div class="fugai" v-show="showconfirm">
+            <div class="confirm">
+                <c1>确定要删除吗?</c1>
+                <div class="bt2s">
+                    <button @click="yesdelete(wantdelete)">确定</button>
+                    <button @click="nodelete">取消</button>
+                </div>
+
+            </div>
+        </div>
         <table class="imagetable">
             <tr>
                 <th class="id1">博客id</th>
@@ -102,7 +130,7 @@ function event_exchange(bid){
             <tr class="blog_line"  v-for=" blog in blog_list">
                 <td class="id1">{{ blog.id }}</td>
                 <td class="description" @click="event_open_blog_click(blog.id)">{{ blog.description }}
-                    <button class="delete" @click.stop="event_deleteblog(blog.id)">删除</button>
+                    <button class="delete" @click.stop="showconf(blog.id)">删除</button>
                 </td>
                 <td class="statuses">{{ statuses(blog.statusadmin,blog.statusauthor) }}
                     <button class="delete" @click.stop="event_fabu(blog.id)" v-if="(blog.statusauthor == 0)">发布</button>
@@ -116,8 +144,10 @@ function event_exchange(bid){
 <style scoped>
 .blogbox {
 
+    display: flex;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 
     margin: 1em;
 }
@@ -166,6 +196,57 @@ table.imagetable td {
     background: rgb(255, 245, 106);
     text-align: left;
 
+}
+.fugai{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+.confirm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top:20%;
+    width: 25vw;
+    height: 30vh;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+
+    background-color: rgb(255, 200, 112);
+}
+
+.confirm > c1{
+    margin-top: 10vh;
+    font-size: 2vw;
+}
+
+.bt2s{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+}
+
+.bt2s > button{
+    width: 10vw;
+    height: 6vh;
+    margin: 5vw;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 1vw;
 }
 .id1 {
     border-width: 1px;

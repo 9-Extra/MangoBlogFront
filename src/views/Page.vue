@@ -167,7 +167,7 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 60vw;
+    width: 80vw;
     height: 8vh;
     margin-top: 4vh;
 
