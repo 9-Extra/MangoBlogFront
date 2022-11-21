@@ -67,7 +67,7 @@ function deletecomment(cid){
         response => {
             if(response.data.code == 0){
                 popup_message("删除成功", "success")
-                router.go(0)
+                get_comments()
             }
         }).catch(
         err => {

@@ -96,8 +96,8 @@ api.get(`/open/blog/${blog.id}`).then(
     background-origin: border-box;
 
     text-align: center;
-
-
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 #title {
@@ -116,9 +116,6 @@ api.get(`/open/blog/${blog.id}`).then(
 
     background-color: rgba(255, 255, 255, 0.4);
 
-    text-align: center;
-    word-wrap: break-word;
-
 }
 
 .markdown-body {
@@ -127,8 +124,6 @@ api.get(`/open/blog/${blog.id}`).then(
     margin: 2em auto;
 
     text-align: left;
-    
-    font-size: 2vw;
 }
 .markdown-body video{
     width: 50%;
@@ -138,6 +133,7 @@ api.get(`/open/blog/${blog.id}`).then(
 .comment {
     display: inline;
     margin-top: 2vh;
+    margin-bottom: 50px;
 }
 </style>
   
