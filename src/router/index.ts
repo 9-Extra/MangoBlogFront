@@ -16,15 +16,22 @@ const Search = () => import("../views/Search.vue");
 const Prev2 = () => import("../views/Prev2.vue");
 const Prev1 = () => import("../views/Prev1.vue");
 const Collection = () => import("../views/Collection.vue");
+const Detailchange = () => import("../views/Detailchange.vue");
+
 const routes = [
     {
         path: "/",
-        redirect: "/Me"
+        redirect: "/Me",
     },
     {
         path: "/Search/:seris/:searchin",
         name: "Search",
         component: Search,
+    },
+    {
+        path: "/Detailchange",
+        name: "Detailchange",
+        component: Detailchange,
     },
     {
         path: "/Collection",

@@ -23,11 +23,15 @@ import HeadImageVue from '@/component/HeadImage.vue';
                     <a :href="href">登录</a>
                 </li>
             </router-link>
+            <div class="my">
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li id="head_image" :class="[isExactActive && 'router-link-exact-active']" @click="navigate">
                     <head-image-vue/>
+                    <b>个人主页</b>
                 </li>
+                
             </router-link>
+            </div>
         </ul>
     </div>
 
@@ -100,6 +104,18 @@ import HeadImageVue from '@/component/HeadImage.vue';
 }
 #head_image:hover {
     background-color: inherit;
+}
+
+.my{
+    flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+b{
+    position: absolute;
+    margin-top: 1.5vh;
 }
 </style>
 

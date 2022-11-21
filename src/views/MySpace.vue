@@ -9,30 +9,6 @@ import type { CodeInfo } from '@/utils/utils';
 import Collection from './Collection.vue';
 
 
-function event_logout_click(){
-    token_util.set_token(null);
-    router.push("/Login")
-}
-
-function event_upload_profile_click(){
-    let files = (document.getElementById('upload_file_id') as HTMLInputElement | null)?.files as FileList;
-    if (files && files.length > 0){
-        upload_head_image(files[0]).then(
-            response => {
-                let result: CodeInfo<null> = response.data
-                if (result.code != 0){
-                    popup_message("上传头像失败: " + result.message, "error")
-                } else {
-                    router.go(0)//刷新页面
-                }
-            }
-        ).catch(err => {
-            popup_message("上传头像失败: " + err.message, "error")
-        })
-    } else {
-        popup_message("文件无效", "error")
-    }
-}
 
 if (!token_util.get_token()) {
     router.replace("/Login")
@@ -41,6 +17,7 @@ if (!token_util.get_token()) {
 let user: User = reactive({
     id: 0,
     nickname: '',
+    age: 0,
     headImageUrl: '',
     privilege: ''
 })
@@ -62,24 +39,24 @@ function tocollection(){
     router.replace("/Collection")
 }
 
+function todetailchange(){
+    router.replace("/Detailchange")
+}
+
 </script>
 
 <template>
 
     <body>
         <div class="titlebox">
+            <button class="bt1" @click="todetailchange">我的资料</button>
             <h1>我的主页</h1>
-            <button @click="tocollection">我的收藏</button>
+            <button class="bt2" @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
 
             <BlogList id="list_continer"></BlogList>
 
-        </div>
-        <div class="buttonbox">
-            <button @click="event_logout_click">退出登录</button>
-            <input accept="image/*" type="file" id="upload_file_id" />
-            <button @click="event_upload_profile_click">更改头像</button>
         </div>
     </body>
 </template>
@@ -150,7 +127,7 @@ body {
 
 }
 
-.titlebox > button{
+.bt2{
     margin: 10px;
     width: 5vw;
     height: 4vh;
@@ -163,6 +140,21 @@ body {
 
     position: absolute;
     margin-left: 60vw;
+}
+
+.bt1{
+    margin: 10px;
+    width: 8vw;
+    height: 6vh;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 20, 15, 0.5);
+    background-color: rgba(251, 189, 5, 0.856);
+    color: rgba(2, 2, 0, 0.7);
+    transition: 1s;
+    font-size: 1.2vw;
+
+    position: absolute;
+    margin-right: 60vw;
 }
 
 

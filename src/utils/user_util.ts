@@ -6,6 +6,7 @@ import type { Ref } from "vue";
 export interface User{
     id: number
     nickname: string
+    age: number
     headImageUrl: string
     privilege: string //权限
 }

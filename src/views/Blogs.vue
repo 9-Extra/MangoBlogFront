@@ -323,7 +323,7 @@ function collectit(bid){
 
 .title2{
   width: 10vw;
-  height: 10vh;
+  height: 3vh;
   border-top: 1px solid rgba(0, 0, 0, 0.5);
   border-left: 1px solid rgba(0, 0, 0, 0.5);
   border-bottom: 1px solid rgba(5, 0, 0, 0.2);

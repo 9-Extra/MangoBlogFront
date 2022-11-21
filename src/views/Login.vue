@@ -69,7 +69,7 @@ function event_login_click(){
                 </div>
                 <div class="input-box">
                     <label>密码:</label>
-                    <input class="" type="text" placeholder="密码" v-model=person.password />
+                    <input class="" type="password" placeholder="密码" v-model=person.password />
                 </div>
                 </div>
                     <button @click=event_login_click>登录</button>

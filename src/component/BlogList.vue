@@ -26,8 +26,8 @@ let postid: idandaid = reactive({
 })
 
 
-function flash() {
-    get_user_information().then(
+async function flash() {
+    await get_user_information().then(
         user => {
             if (user != null) {
                 api.get("/private/blogs").then(response => {
@@ -38,6 +38,12 @@ function flash() {
             }
         }
     );
+
+    for(let i = 0;i < blog_list.value.length ; i++){
+        if(blog_list.value[i].description.length > 40){
+            blog_list.value[i].description = blog_list.value[i].description.slice(0,40) + "..."
+        }
+    }
 }
 
 flash();
@@ -89,13 +95,11 @@ function event_exchange(bid){
         <table class="imagetable">
             <tr>
                 <th class="id1">博客id</th>
-                <th class="id1">作者id</th>
                 <th class="description">简介</th>
                 <th class="statuses">状态</th>
             </tr>
             <tr class="blog_line"  v-for=" blog in blog_list">
                 <td class="id1">{{ blog.id }}</td>
-                <td class="id1">{{ blog.authorid }}</td>
                 <td class="description" @click="event_open_blog_click(blog.id)">{{ blog.description }}
                     <button class="delete" @click.stop="event_deleteblog(blog.id)">删除</button>
                 </td>
@@ -190,7 +194,7 @@ table.imagetable td {
 .description {
     border-width: 1px;
     padding: 8px;
-    width: 40vw;
+    width: 47vw;
     height: 5vh;
     border-style: solid;
     border-color: #999999;
@@ -205,7 +209,7 @@ table.imagetable td {
 .statuses {
     border-width: 1px;
     padding: 8px;
-    width: 20vw;
+    width: 22vw;
     height: 5vh;
     border-style: solid;
     border-color: #999999;
