@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import editor from "mavon-editor"
-import 'mavon-editor/dist/css/index.css'
 import { reactive, ref, watch, type Ref } from "vue"
 import popup_message from "@/utils/message_popup";
 import type { Blog } from "@/utils/utils"
 import api from "@/utils/axios_blog";
+import CommentAreaVue from "./component/CommentArea.vue";
 
 let md = editor.markdownIt;//获取mavon-editor中的markdown-it对象
 
@@ -58,9 +58,8 @@ api.get(`/open/blog/${blog.id}`).then(
 
             document.title = blog.description
             
-            let main = document.getElementById("markdown-body");
+            let main = document.getElementById("markdown-content");
             if (main){
-                console.log(main.innerHTML)
                 main.innerHTML = md.render(blog.content)
             }
         }
@@ -72,12 +71,14 @@ api.get(`/open/blog/${blog.id}`).then(
 
 <template>
     <div id="main">
+        <div hidden><editor.mavonEditor/>用一个超级奇怪的办法解决问题</div>
         <h2 id="title">{{blog.description}}</h2>
         <div class = "markdown-box">
-            <div id = "markdown-body">
+            <div id="markdown-content" class = "markdown-body">
 
             </div>
         </div>
+        <CommentAreaVue class="comment" :blog_id="blog.id"/>
     </div>
 </template>
 
@@ -100,31 +101,38 @@ api.get(`/open/blog/${blog.id}`).then(
 
 #title {
     font-size: 5em;
+    margin: 40px;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
 .markdown-box{
     width: 70%;
     display:inline-block;
-    margin: 0 auto;
     backdrop-filter: blur(10px);
     border: solid 2px rgba(255, 255, 255, 0.2);
 
     border-radius: 10px;
 
+    background-color: rgba(255, 255, 255, 0.4);
+
     text-align: center;
     word-wrap: break-word;
 }
 
-#markdown-body {
+.markdown-body {
     width: 90%;
     display:inline-block;
-    margin: 0 auto;
+    margin: 2em auto;
 
     text-align: left;
 }
-#markdown-body video{
+.markdown-body video{
     width: 50%;
     height: auto;
+}
+
+.comment {
+    display: inline;
 }
 </style>
   
