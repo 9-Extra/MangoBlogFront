@@ -45,6 +45,7 @@ function event_login_click(){
             token_util.set_token(info.data)
 
             popup_message("登录成功", "success");
+            router.go(0)
             router.push('/Blogs')
             
         }

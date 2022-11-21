@@ -6,11 +6,11 @@ import { reactive } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
 import type { CodeInfo } from '@/utils/utils';
-import Collection from './Collection.vue';
 
 
 function event_logout_click(){
     token_util.set_token(null);
+    router.go(0)
     router.push("/Login")
 }
 

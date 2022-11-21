@@ -11,7 +11,7 @@ import HeadImageVue from '@/component/HeadImage.vue';
                 </li>
             </router-link>
                 <li>
-                    <a href="/blog_editor.html" target="_blank">发布</a>
+                    <a href="/blog_editor.html" target="_blank">新博客</a>
                 </li>
             <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
