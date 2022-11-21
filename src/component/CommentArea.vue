@@ -4,7 +4,7 @@ import api from "@/utils/axios_blog";
 import { get_user_information_by_id,get_user_information, type User } from "@/utils/user_util";
 import popup_message from "@/utils/message_popup";
 import type { CodeInfo } from "@/utils/utils";
-import type { ElementNode } from "@vue/compiler-core";
+import HeadImageVue from "@/component/HeadImage.vue"
 import router from "@/router";
 
 interface User{
@@ -148,6 +148,7 @@ function event_publish_click() {
             if (data.code != 0) {
                 popup_message("发布评论失败:" + data.message, "error")
             } else {
+                get_comments()
                 popup_message("发布评论成功", "success")
             }
         }
@@ -170,7 +171,7 @@ let user_info_store: Ref<Map<number, User>> = ref(new Map())
 
             <div class="blgs">
                 <div class="ablog" v-if="complete" v-for="comment in comments">
-                    <div class="nam11box">
+                    <div class="nambox">
                         <HeadImageVue :head_image_url="comment.author_head_image? comment.author_head_image : null"/>
                         <h3>{{ comment.author_nick_name }}</h3>
                         <button v-if="meinfo.id == comment.authorid || meinfo.privilege == '1'" @click="deletecomment(comment.id)">删除</button>

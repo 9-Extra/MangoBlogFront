@@ -47,15 +47,13 @@ get_user_information().then(
 
 getme()
 
-let authorinfo = {
+let authorinfo = ref({
     id: 0,
     nickname: '',
     age: 0,
     headImageUrl: '',
     privilege: ''
-}
-
-
+})
 
 let md = editor.markdownIt;//获取mavon-editor中的markdown-it对象
 
@@ -150,7 +148,7 @@ async function getauthor(){
     console.log(blog.authorid)
     api.get("/user/" + blog.authorid).then(response => {
         
-        authorinfo = response.data.data;
+        authorinfo.value = response.data.data;
     })
 }
 
