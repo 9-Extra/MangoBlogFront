@@ -62,6 +62,11 @@ function event_open_blog_click(blog_id: number | undefined) {
   else window.open("/blog_view.html?id=" + blog_id)
 }
 
+function change_click(blog_id: number | undefined) {
+  if (!blog_id) { }
+  else window.open("/blog_editor.html?id=" + blog_id)
+}
+
 function event_deleteblog(bid) {
     postid.blog_id = bid;
     postid.operation = "delete";
@@ -85,9 +90,6 @@ function event_fabu(bid){
     })
 }
 
-function event_exchange(bid){
-    
-}
 
 let wantdelete = ref(0)
 let showconfirm = ref(false)
@@ -134,7 +136,7 @@ function nodelete(){
                 </td>
                 <td class="statuses">{{ statuses(blog.statusadmin,blog.statusauthor) }}
                     <button class="delete" @click.stop="event_fabu(blog.id)" v-if="(blog.statusauthor == 0)">发布</button>
-                    <button class="renew" @click.stop="event_exchange(blog.id)" v-if="(blog.statusauthor == 1 && blog.statusadmin != -1)">修改并重新发布</button>
+                    <button class="renew" @click.stop="change_click(blog.id)" v-if="(blog.statusauthor == 1 && blog.statusadmin != -1)">修改并重新发布</button>
                 </td>
             </tr>
         </table>

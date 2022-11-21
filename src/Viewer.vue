@@ -95,13 +95,12 @@ api.get(`/open/blog/${blog.id}`).then(
 
     text-align: center;
 
-    overflow: hidden;
-    overflow-y: scroll;
+
 }
 
 #title {
     font-size: 5em;
-    margin: 40px;
+
     font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
@@ -117,6 +116,7 @@ api.get(`/open/blog/${blog.id}`).then(
 
     text-align: center;
     word-wrap: break-word;
+
 }
 
 .markdown-body {
@@ -125,6 +125,8 @@ api.get(`/open/blog/${blog.id}`).then(
     margin: 2em auto;
 
     text-align: left;
+    
+    font-size: 2vw;
 }
 .markdown-body video{
     width: 50%;
@@ -133,6 +135,7 @@ api.get(`/open/blog/${blog.id}`).then(
 
 .comment {
     display: inline;
+    margin-top: 2vh;
 }
 </style>
   

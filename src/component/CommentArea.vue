@@ -13,6 +13,20 @@ interface Comment {
     content: string
 }
 
+interface Commentsend {
+    blogid: number,
+    authorid: number,
+    content: string
+}
+
+interface users {
+    id: number
+    nickname: string
+    headImageUrl: string
+    realimgurl:string
+    content:string
+}
+
 const props = defineProps<{
     blog_id: number
 }>()
@@ -20,6 +34,9 @@ const props = defineProps<{
 const comments: Ref<Comment[]> = ref([])
 const textareaRef: InstanceType<any> = ref(null);
 const content = ref('')
+let users_list = ref(new Map())
+
+
 
 function get_comments() {
     api.get(`/comment/get/${props.blog_id}`).then(
@@ -28,7 +45,9 @@ function get_comments() {
             if (data.code != 0) {
                 popup_message("获取评论失败: " + data.message, "error")
             } else {
+                
                 comments.value = data.data
+                console.log(comments.value)
             }
         }
     ).catch(
@@ -36,6 +55,7 @@ function get_comments() {
             popup_message("获取评论失败: " + err.message, "error")
         }
     )
+   
 }
 
 watch(content, () => {
@@ -61,50 +81,101 @@ function event_publish_click() {
         return;
     }
 
-    let comment: Comment = {
-        id: 0,//无视
+    let comment: Commentsend = {
         blogid: props.blog_id,
         authorid: 0,//无视
         content: content.value
     }
+
     api.post("/comment/add", comment).then(
         response => {
             let data: CodeInfo<boolean> = response.data;
             if (data.code != 0){
                 popup_message("发布评论失败:" + data.message, "error")
             } else {
-                get_comments()//刷新评论区
+                getheaders()//刷新评论区
                 popup_message("发布评论成功", "success")
             }
         }
+        
     ).catch(err => {
         popup_message("发布评论失败:" + err.message, "error")
     })
-
 }
 
 get_comments()//获取所有评论
+
+async function getheaders(){
+    users_list.value
+    await api.get(`/comment/get/${props.blog_id}`).then(
+        response => {
+            let data: CodeInfo<Comment[]> = response.data;
+            if (data.code != 0) {
+                popup_message("获取评论失败: " + data.message, "error")
+            } else {
+                
+                comments.value = data.data
+                console.log(comments.value)
+            }
+        }
+    ).catch(
+        err => {
+            popup_message("获取评论失败: " + err.message, "error")
+        }
+    )
+    console.log(comments.value)
+    for (let index = 0; index < comments.value.length; index++) {
+            await api.get("/user/" + comments.value[index].authorid).then(response => {
+                    console.log(response.data.data)
+                    let data = {
+                        nickname: response.data.data.nickname,
+                        headImageUrl: response.data.data.headImageUrl,
+                        content: "",
+                        realimgurl: ""
+                    }
+                    users_list.value.set(index, data)
+            }).catch(error => {
+            popup_message("获取用户名失败: " + error.message, "error")
+            })
+        
+    }
+
+    for (let index = 0; index < comments.value.length; index++) {
+        let comment = comments.value[index]
+        users_list.value.get(comment.authorid).content = comment.content
+        users_list.value.get(comment.authorid).realimgurl = api.getUri() + "/image/download" + users_list.value.get(comment.authorid).realimgurl;
+    }
+
+    console.log(users_list.value)
+}
+
+getheaders()
+
+
 
 </script>
 
 <template>
     <div id="main">
-        <div class="commentbox">
-            <table class="imagetable">
-                <tr>
-                    <th class="id2">评论人</th>
-                    <th class="statuses">内容</th>
-                </tr>
-                <tr class="blog_line" v-for=" comment in comments">
-                    <td class="id2">
-                        <a herf="http://c.biancheng.net" target="_blank">{{ comment.authorid }}</a>
-                    </td>
-                    <td class="statuses">
-                        {{ comment.content }}
-                    </td>
-                </tr>
-            </table>
+
+        <div class="box">
+
+        <div class="blgs">
+        <div class="ablog" v-for="comment in users_list.values()">
+            <div class="nambox">
+            <img class="head_image" v-if="true" :src="comment.realimgurl" />
+            <h3>{{ comment.nickname }}</h3>
+            </div>
+            <h4>{{ comment.content }}</h4>
+
         </div>
+        </div>
+
+        </div>
+
+
+
+
         <div id="comment-text-box">
             <textarea id="comment-text" ref="textareaRef" v-model="content" placeholder="发一条友善的评论..." style="" />
             <button id="comment-button" @click.stop="event_publish_click">发布评论</button>
@@ -114,14 +185,111 @@ get_comments()//获取所有评论
 </template>
 
 <style scoped>
+#main {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  
+}
+
+.head_image{
+
+    margin: 10px;
+}
+
+.nambox {
+    display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+    border-radius: 50%;
+    height: 5vh;
+    width: 5vh;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid wheat;
+}
+.blgs {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: center;
+  width: 80vw;
+  height: 70vh;
+
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+    overflow-y: scroll;
+
+}
+.ablog {
+  width: 75vw;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: flex-start;
+  margin-left: 1vw;
+  margin-top: 1vh;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  border-left: 1px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(5, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+
+  background-color: rgb(255, 205, 139);
+}
+
+
+
+
+
+.ablog>h3 {
+
+  margin-left: 4vw;
+  font-size: 2vw;
+}
+
+.ablog>h4 {
+
+    margin-top: 1vh;
+    margin-bottom: 8vh;
+    margin-left: 1vw;
+  font-size: 1.3vw;
+  word-break: break-all;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+h3:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+h4:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 .commentbox {
     margin: 1em auto;
     width: 70%;
 }
 
 #comment-text-box {
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: flex-end;
     margin: 0 auto;
     width: 50%;
+    
+    margin-top: 5vh;
 }
 
 #comment-text {
@@ -131,7 +299,7 @@ get_comments()//获取所有评论
     width: 100%;
     height: 5em;
 
-    background-color: #e98c15;
+    background-color: #f7a53b;
     border: 20px solid rgba(233, 140, 21, 100);
     border-radius: 15px;
     outline: none;
@@ -149,9 +317,17 @@ get_comments()//获取所有评论
 }
 
 #comment-button {
-    display: block;
-    margin-top: 1em;
-    margin-left: 20px;
+    margin-right: 1vw;
+    background-color: rgb(255, 234, 0);
+    border: 1px solid #ddd;
+    color: #877777;
+    border-radius: 3px;
+    outline: none;
+    height: 21px;
+    cursor: pointer;
+    padding: 0 2px;
+    width: 5vw;
+    height: 3vh;
 }
 
 
