@@ -128,10 +128,6 @@ api.get(`/open/blog/${blog.id}`).then(
 
     text-align: left;
 }
-.markdown-body video{
-    width: 50%;
-    height: auto;
-}
 
 .comment {
     display: inline;
@@ -139,4 +135,12 @@ api.get(`/open/blog/${blog.id}`).then(
     padding-bottom: 50px;
 }
 </style>
+
+<style>
+.markdown-body video{
+    width: 100%;
+    height: auto;
+}
+</style>
+
   

@@ -324,9 +324,10 @@ input[type=file] {
 .fa-mavon-upload-video::before {
     content: url("/video.ico");
 }
-
-.markdown-body video {
-    width: 50%;
+</style>
+<style>
+.markdown-body video{
+    width: 100%;
     height: auto;
 }
 </style>
