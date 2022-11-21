@@ -136,7 +136,7 @@ api.get(`/open/blog/${blog.id}`).then(
 .comment {
     display: inline;
     margin-top: 2vh;
-    margin-bottom: 50px;
+    padding-bottom: 50px;
 }
 </style>
   
