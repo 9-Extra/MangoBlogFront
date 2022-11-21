@@ -59,7 +59,7 @@ function statuses(sadmin:number,sauthor:number):string{
 
 function event_open_blog_click(blog_id: number | undefined) {
   if (!blog_id) { }
-  else window.open("/blog_view.html?id=" + blog_id)
+  else window.open("/blog_editor.html?id=" + blog_id)
 }
 
 function change_click(blog_id: number | undefined) {
@@ -115,12 +115,11 @@ function nodelete(){
     <div class="blogbox">
         <div class="fugai" v-show="showconfirm">
             <div class="confirm">
-                <c1>确定要删除吗?</c1>
+                <span>确定要删除吗?</span>
                 <div class="bt2s">
-                    <button @click="yesdelete(wantdelete)">确定</button>
-                    <button @click="nodelete">取消</button>
+                    <button @click.stop="yesdelete(wantdelete)">确定</button>
+                    <button @click.stop="nodelete">取消</button>
                 </div>
-
             </div>
         </div>
         <table class="imagetable">
@@ -206,17 +205,15 @@ table.imagetable td {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: absolute;
+    position: fixed;
 }
 .confirm{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    position: absolute;
-    top:20%;
-    width: 25vw;
-    height: 30vh;
+    position: fixed;
+    width: 400px;
+    height: 230px;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -226,8 +223,9 @@ table.imagetable td {
     background-color: rgb(255, 200, 112);
 }
 
-.confirm > c1{
-    margin-top: 10vh;
+.confirm > span{
+    display: flex;
+    margin-top: 30px;
     font-size: 2vw;
 }
 
@@ -240,9 +238,9 @@ table.imagetable td {
 }
 
 .bt2s > button{
-    width: 10vw;
-    height: 6vh;
-    margin: 5vw;
+    width: 120px;
+    height: 50px;
+    margin: 60px 30px;
     border-radius: 20px;
     border: 1px solid rgba(56, 20, 15, 0.5);
     background-color: rgba(251, 189, 5, 0.856);

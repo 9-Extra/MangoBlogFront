@@ -1,27 +1,19 @@
 <script setup lang="ts">
-import { get_user_information } from "@/utils/user_util";
-import { ref } from "vue"
-import api from "@/utils/axios_blog";
+import api from '@/utils/axios_blog';
 
-let head_image_url = ref("/default_head_image.jpeg")
-let display_head_image = ref(true)
+const props = defineProps<{
+    head_image_url: string | undefined
+}>()
 
-get_user_information().then(
-    user => {
-        console.log(user)
-        if (user.headImageUrl != null) {
-            head_image_url.value = api.getUri() + "/image/download" + user.headImageUrl;
-        }
-    }
-).catch(err => {
-    //获取头像失败，认为是未登录
-    display_head_image.value = false
-});
+let head_image_url = "./default_head_image.jpeg"
+if (props.head_image_url || props.head_image_url == ""){
+    head_image_url = api.getUri() + "/image/download" + props.head_image_url;
+}
+
 </script>
 
 <template>
-    <img v-if="display_head_image" :src="head_image_url" />
-    <span v-else>未登录</span>
+    <img :src="head_image_url" />
 </template>
 
 <style scoped>

@@ -1,5 +1,31 @@
 <script setup lang="ts">
 import HeadImageVue from '@/component/HeadImage.vue';
+import popup_message from '@/utils/message_popup';
+import token_util from '@/utils/token_util';
+import { get_user_information, type User } from '@/utils/user_util';
+import { ref, type Ref } from 'vue';
+
+let user_info: Ref<User | null> = ref(null)
+
+if (token_util.get_token() != null) {
+    get_user_information().then(
+        user => {
+            user_info.value = user
+        }
+    ).catch(err => {
+        //认为是未登录
+    });
+}
+
+function event_new_blog_click(){
+    if (user_info.value == null){
+        popup_message("请先登录", "warn")
+        return
+    }
+
+    window.open("/blog_editor.html")
+
+}
 </script>
 
 <template>
@@ -11,7 +37,7 @@ import HeadImageVue from '@/component/HeadImage.vue';
                 </li>
             </router-link>
                 <li>
-                    <a href="/blog_editor.html" target="_blank">新建博客</a>
+                    <a href="javascript:void(0);" @click="event_new_blog_click">新建博客</a>
                 </li>
             <router-link to="/Register" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li :class="[isActive && 'active', isExactActive && 'router-link-exact-active']" @click="navigate">
@@ -26,8 +52,9 @@ import HeadImageVue from '@/component/HeadImage.vue';
             <div class="my">
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li id="head_image" :class="[isExactActive && 'router-link-exact-active']" @click="navigate">
-                    <head-image-vue/>
-                    <b>个人主页</b>
+                    <head-image-vue v-if="user_info" :head_image_url="user_info.headImageUrl" />
+                    <b v-if="user_info">{{user_info.nickname}}</b>
+                    <b v-else>未登录</b>
                 </li>
                 
             </router-link>
