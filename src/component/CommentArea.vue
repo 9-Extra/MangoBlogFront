@@ -5,6 +5,42 @@ import { get_user_information } from "@/utils/user_util";
 import popup_message from "@/utils/message_popup";
 import type { CodeInfo } from "@/utils/utils";
 import type { ElementNode } from "@vue/compiler-core";
+import router from "@/router";
+
+export interface User{
+    id: number
+    nickname: string
+    age: number
+    headImageUrl?: string
+    privilege: string //权限
+}
+
+let meinfo: User = reactive({
+    id: 0,
+    nickname: '',
+    age: 0,
+    headImageUrl: '',
+    privilege: ''
+})
+
+function getme(){
+get_user_information().then(
+    user_rep => {
+        meinfo.id = user_rep.id
+        meinfo.nickname = user_rep.nickname
+        meinfo.age = user_rep.age
+        meinfo.headImageUrl = user_rep.headImageUrl
+        meinfo.privilege = user_rep.privilege
+    }
+)
+.catch(err => {
+    popup_message("后端异常: " + err.message, "error")
+    router.replace("/Login")
+})
+}
+
+
+getme()
 
 interface Comment {
     id: number,
@@ -20,7 +56,8 @@ interface Commentsend {
 }
 
 interface users {
-    id: number
+    id:number
+    cid: number
     nickname: string
     headImageUrl: string
     realimgurl:string
@@ -34,9 +71,7 @@ const props = defineProps<{
 const comments: Ref<Comment[]> = ref([])
 const textareaRef: InstanceType<any> = ref(null);
 const content = ref('')
-let users_list = ref(new Map())
-
-
+let users_list: Ref<users[]> = ref([])
 
 function get_comments() {
     api.get(`/comment/get/${props.blog_id}`).then(
@@ -57,6 +92,21 @@ function get_comments() {
     )
    
 }
+
+function deletecomment(cid){
+    api.post("/comment/delete?commentid="+cid).then(
+        response => {
+            if(response.data.code == 0){
+                popup_message("删除成功", "success")
+                router.go(0)
+            }
+        }).catch(
+        err => {
+            popup_message("删除失败: " + err.message, "error")
+        }
+    )
+}
+
 
 watch(content, () => {
     if (content.value.length > 255) {
@@ -93,7 +143,7 @@ function event_publish_click() {
             if (data.code != 0){
                 popup_message("发布评论失败:" + data.message, "error")
             } else {
-                getheaders()//刷新评论区
+                router.go(0)//刷新评论区
                 popup_message("发布评论成功", "success")
             }
         }
@@ -106,7 +156,7 @@ function event_publish_click() {
 get_comments()//获取所有评论
 
 async function getheaders(){
-    users_list.value
+    users_list.value.slice(0,1);
     await api.get(`/comment/get/${props.blog_id}`).then(
         response => {
             let data: CodeInfo<Comment[]> = response.data;
@@ -124,16 +174,11 @@ async function getheaders(){
         }
     )
     console.log(comments.value)
+
     for (let index = 0; index < comments.value.length; index++) {
             await api.get("/user/" + comments.value[index].authorid).then(response => {
-                    console.log(response.data.data)
-                    let data = {
-                        nickname: response.data.data.nickname,
-                        headImageUrl: response.data.data.headImageUrl,
-                        content: "",
-                        realimgurl: ""
-                    }
-                    users_list.value.set(index, data)
+                    
+                    users_list.value.push(response.data.data)
             }).catch(error => {
             popup_message("获取用户名失败: " + error.message, "error")
             })
@@ -141,9 +186,9 @@ async function getheaders(){
     }
 
     for (let index = 0; index < comments.value.length; index++) {
-        let comment = comments.value[index]
-        users_list.value.get(comment.authorid).content = comment.content
-        users_list.value.get(comment.authorid).realimgurl = api.getUri() + "/image/download" + users_list.value.get(comment.authorid).realimgurl;
+        users_list.value[index].content = comments.value[index].content
+        users_list.value[index].realimgurl = api.getUri() + "/image/download" + users_list.value[index].headImageUrl;
+        users_list.value[index].cid = comments.value[index].id
     }
 
     console.log(users_list.value)
@@ -161,10 +206,11 @@ getheaders()
         <div class="box">
 
         <div class="blgs">
-        <div class="ablog" v-for="comment in users_list.values()">
+        <div class="ablog" v-for="comment in users_list">
             <div class="nambox">
             <img class="head_image" v-if="true" :src="comment.realimgurl" />
             <h3>{{ comment.nickname }}</h3>
+            <button v-if="meinfo.id == comment.id || meinfo.privilege == '1'" @click="deletecomment(comment.cid)">删除</button>
             </div>
             <h4>{{ comment.content }}</h4>
 
@@ -197,6 +243,26 @@ getheaders()
 .head_image{
 
     margin: 10px;
+}
+
+.nambox > button{
+    position:relative;
+        margin-top: 0vh;
+        margin-left:60vw;
+        width: 4vw;
+        height: 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(56, 20, 15, 0.5);
+        background-color: rgba(251, 189, 5, 0.856);
+        color: rgba(2, 2, 0, 0.7);
+        transition: 1s;
+        font-size: 0.7vw;
+        cursor: pointer;    
+}
+
+button:hover {
+border: 1px solid rgba(255, 34, 56, 0.8);
+background-color: rgba(255, 34, 56, 0.838);
 }
 
 .nambox {

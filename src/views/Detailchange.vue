@@ -131,7 +131,7 @@ function showconf(){
     showconfirm.value = true;
 }
 
-function yesdelete(thisbid){
+function yesdelete(){
     sendnew();
     showconfirm.value = false;
 }
