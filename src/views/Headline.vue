@@ -5,7 +5,7 @@ import token_util from '@/utils/token_util';
 import { get_user_information, type User } from '@/utils/user_util';
 import { ref, type Ref } from 'vue';
 
-let user_info: Ref<User | null> = ref(null)
+let user_info: Ref<User | undefined> = ref(undefined)
 
 if (token_util.get_token() != null) {
     get_user_information().then(
@@ -52,7 +52,7 @@ function event_new_blog_click(){
             <div class="my">
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li id="head_image" :class="[isExactActive && 'router-link-exact-active']" @click="navigate">
-                    <head-image-vue v-if="user_info" :head_image_url="user_info.headImageUrl" />
+                    <head-image-vue v-if="user_info" :head_image_url="user_info.headImageUrl? user_info.headImageUrl : null" />
                     <b v-if="user_info">{{user_info.nickname}}</b>
                     <b v-else>未登录</b>
                 </li>

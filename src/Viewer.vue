@@ -78,7 +78,9 @@ api.get(`/open/blog/${blog.id}`).then(
 
             </div>
         </div>
-        <CommentAreaVue class="comment" :blog_id="blog.id"/>
+        <Suspense>
+            <CommentAreaVue class="comment" :blog_id="blog.id"/>
+        </Suspense>
     </div>
 </template>
 
