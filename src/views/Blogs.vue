@@ -131,7 +131,7 @@ async function findav() {
     blog_list.value = response.data.data
     hot_list.value = response.data.data
     hot_list.value = hot_list.value.sort((a, b) => { return b.count - a.count })
-    hot_list.value = hot_list.value.slice(0, 10)
+    hot_list.value = hot_list.value.slice(0, 20)
     availablenum = blog_list.value.length
   }).catch(error => {
     popup_message("加载失败: " + error.message, "error")
@@ -144,7 +144,7 @@ async function findav() {
   maxtext = pagemax.value.toString();
 
 
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 20; i++) {
     await api.get("/user/" + hot_list.value[i].authorid).then(response => {
 
       hot_list.value[i].nickname = response.data.data.nickname
@@ -316,7 +316,7 @@ function collectit(bid){
   height: 70vh;
 
   backdrop-filter: blur(10px);
-
+  background-color: rgb(241, 111, 55);
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -398,7 +398,7 @@ function collectit(bid){
   height: 70vh;
 
   backdrop-filter: blur(10px);
-
+  background-color: rgb(244, 175, 28);
   overflow: hidden;
   overflow-y: scroll;
 }

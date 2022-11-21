@@ -83,9 +83,9 @@ if (is_me){
     })
 }
 
-function event_open_blog_click(blog_id: number) {
-    if (!blog_id) { }
-    else window.open("/blog_editor.html?id=" + blog_id)
+function event_open_blog_click(blog_id: number | undefined) {
+  if (!blog_id) { }
+  else window.open("/blog_view.html?id=" + blog_id)
 }
 
 interface Blog {

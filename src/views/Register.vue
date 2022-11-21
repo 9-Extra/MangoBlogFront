@@ -46,7 +46,7 @@ let personL: PersonInfoL = reactive(
 const router = useRouter();
 function event_register_click() {
 
-
+if(token_util.get_token() == null){
     if (person.nickname.length < 3) {
         popup_message("昵称太短", "warn")
         return
@@ -105,9 +105,13 @@ function event_register_click() {
     }).catch(error => {
         popup_message("注册失败: " + error.message, "error")
     })
+    }
+    else popup_message("注册失败:请先退出登录" , "error")
 }
 
-
+function event_tolog(){
+    router.push("/Login")
+}
 
 </script>
 
@@ -130,6 +134,7 @@ function event_register_click() {
                 </div>
                 </div>
                     <button @click=event_register_click>注册</button>
+                    <a class="reg" @click="event_tolog">已有账号?前往登录</a>
                 </div>
 
     </body>
@@ -170,6 +175,8 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
+
+    background-color: rgb(255, 197, 80);
 
     backdrop-filter: blur(10px);
 } 
@@ -229,6 +236,22 @@ body {
 .box > button:hover {
     border: 1px solid rgba(255, 34, 56, 0.8);
     background-color: rgba(255, 34, 56, 0.838);
+    cursor: pointer;
+}
+
+.reg{
+    position: absolute;
+    bottom: 2vh;
+    right: 2vw;
+    width: 15vw;
+    height: 4vh;
+
+    transition: 1s;
+    font-size: 1vw;
+}
+
+.reg:hover{
+    text-decoration: underline;
     cursor: pointer;
 }
 </style>

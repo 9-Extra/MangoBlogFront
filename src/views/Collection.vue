@@ -59,7 +59,7 @@ function backblogs() {
 
 function event_open_blog_click(blog_id: number | undefined) {
   if (!blog_id) { }
-  else window.open("/blog_editor.html?id=" + blog_id)
+  else window.open("/blog_view.html?id=" + blog_id)
 }
 
 function event_toaid(auid: number | undefined) {

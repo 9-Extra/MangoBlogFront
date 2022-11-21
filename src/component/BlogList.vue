@@ -57,8 +57,9 @@ function statuses(sadmin:number,sauthor:number):string{
 }
 
 
-function event_open_blog_click(blog_id: number) {
-    window.open("/blog_editor.html?id=" + blog_id)
+function event_open_blog_click(blog_id: number | undefined) {
+  if (!blog_id) { }
+  else window.open("/blog_view.html?id=" + blog_id)
 }
 
 function event_deleteblog(bid) {

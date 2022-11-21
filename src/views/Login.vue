@@ -30,32 +30,41 @@ const emit = defineEmits<{
 }>();
 
 function event_login_click(){
-    let person_data: PersonInfo = {
-        id: person.id,
-        password: person.password
-    }
-
-    api.post("/login", person_data).then(response => {
-        let data = response.data;
-        if (data.code != 0){
-            popup_message("登录失败: " + data.message, "error")
-        } else {
-            let info: CodeInfo<string> = response.data;
-            
-            token_util.set_token(info.data)
-
-            popup_message("登录成功", "success");
-            router.go(0)
-            router.push('/Blogs')
-            
+    if(token_util.get_token() == null){
+            let person_data: PersonInfo = {
+            id: person.id,
+            password: person.password
         }
-    }).catch(error => {
-        popup_message("登录失败: " + error.message, "error")
 
-    })
+        api.post("/login", person_data).then(response => {
+            let data = response.data;
+            if (data.code != 0){
+                popup_message("登录失败: " + data.message, "error")
+            } else {
+                let info: CodeInfo<string> = response.data;
+                
+                token_util.set_token(info.data)
+
+                popup_message("登录成功", "success");
+                router.go(0)
+                router.push('/Blogs')
+                
+            }
+        }).catch(error => {
+            popup_message("登录失败: " + error.message, "error")
+
+        })
+    }
+    else popup_message("登录失败: 您已登录,请先退出登录" , "error")
     
-
 }
+
+function event_toreg(){
+    router.push("/Register")
+}
+
+
+
 
 </script>
 
@@ -73,8 +82,10 @@ function event_login_click(){
                     <input class="" type="password" placeholder="密码" v-model=person.password />
                 </div>
                 </div>
-                    <button @click=event_login_click>登录</button>
+                    <button class="log" @click=event_login_click>登录</button>
+                    <a class="reg" @click="event_toreg">没有账号?前往注册</a>
                 </div>
+                
                 
                 
     </body>
@@ -115,6 +126,8 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
+
+    background-color: rgb(255, 188, 80);
 
     backdrop-filter: blur(10px);
 } 
@@ -159,7 +172,7 @@ body {
     opacity: 0.7;
 }
 
-.box > button{
+.log{
     margin: 10px;
     width: 15vw;
     height: 8vh;
@@ -169,6 +182,22 @@ body {
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
     font-size: 1.5vw;
+}
+
+.reg{
+    position: absolute;
+    bottom: 2vh;
+    right: 2vw;
+    width: 15vw;
+    height: 4vh;
+
+    transition: 1s;
+    font-size: 1vw;
+}
+
+.reg:hover{
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .box > button:hover {

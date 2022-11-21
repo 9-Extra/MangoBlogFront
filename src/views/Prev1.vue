@@ -93,6 +93,11 @@ function rejectit(tbid){
         })
 }
 
+function event_open_blog_click(blog_id: number | undefined) {
+  if (!blog_id) { }
+  else window.open("/blog_view.html?id=" + blog_id)
+}
+
 </script>
 
 <template>
@@ -112,14 +117,16 @@ function rejectit(tbid){
             <div class="blogbox">
             <table class="imagetable">
             <tr>
-                <th class="id2">博客id</th>
-                <th class="id2">用户id</th>
+                <th class="id1">博客id</th>
+                <th class="id1">用户id</th>
                 <th class="description">主题</th>
+                <th class="controler">操作</th>
             </tr>
             <tr class="blog_line" v-for=" blg in blogs_list">
                 <td class="id2">{{ blg.id }}</td>
                 <td class="id2" @click="event_toaid(blg.authorid)">{{ blg.authorid }}</td>
-                <td class="description" >{{blg.description }}
+                <td class="description2" @click="event_open_blog_click(blg.id)">{{blg.description }}</td>
+                <td class="controler">
                     <button class="delete"  @click="allowit(blg.id)" v-if="seris == 0 || seris == 2">通过</button>
                     <button class="delete"  @click="rejectit(blg.id)" v-if="seris == 0 || seris == 1">拒绝</button>
                 </td>
@@ -240,24 +247,33 @@ background: rgb(255, 245, 106);
 text-align: left;
 
 }
-.id1 {
+.controler {
 border-width: 1px;
-width: 12vw;
+width: 13vw;
 height: 5vh;
 padding: 8px;
 border-style: solid;
 border-color: #999999;
-font-size: 2vw;
+font-size: 1.6vw;
+}
+.id1 {
+border-width: 1px;
+width: 6vw;
+height: 5vh;
+padding: 8px;
+border-style: solid;
+border-color: #999999;
+font-size: 1.6vw;
 }
 
 .id2 {
 border-width: 1px;
-width: 9vw;
+width: 6vw;
 height: 5vh;
 padding: 8px;
 border-style: solid;
 border-color: #999999;
-font-size: 2vw;
+font-size: 1.6vw;
 }
 
 .id2:hover{
@@ -268,13 +284,27 @@ cursor: pointer;
 .description {
 border-width: 1px;
 padding: 8px;
-width: 55vw;
+width: 45vw;
 height: 5vh;
 border-style: solid;
 border-color: #999999;
 font-size: 2vw;
 }
 
+.description2 {
+border-width: 1px;
+padding: 8px;
+width: 45vw;
+height: 5vh;
+border-style: solid;
+border-color: #999999;
+font-size: 2vw;
+}
+
+.description2:hover{
+text-decoration:underline;
+cursor: pointer;
+}
 
 .delete{
 cursor: pointer;

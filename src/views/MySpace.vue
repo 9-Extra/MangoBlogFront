@@ -50,6 +50,7 @@ function todetailchange(){
         <div class="titlebox">
             <button class="bt1" @click="todetailchange">我的资料</button>
             <h1>我的主页</h1>
+            <h2>我的id:{{user.id}}</h2>
             <button class="bt2" @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
@@ -162,6 +163,13 @@ h1 {
     top: 1/2vh;
     color: rgb(13, 13, 12);
     font-size: 3vw;
+}
+h2{
+    width: 25vw;
+    position: absolute;
+    left: 23vw;
+    top: 4vh;
+    font-size: 1vw;
 }
 
 #list_continer {

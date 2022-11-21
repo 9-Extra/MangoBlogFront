@@ -322,7 +322,7 @@ body {
     align-items: flex-start;
 
     margin-top:4vh;
-    height: 38vh;
+    height: 35vh;
     width: 33vw;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
