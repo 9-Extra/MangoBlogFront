@@ -4,22 +4,24 @@ import { ref } from "vue"
 import api from "@/utils/axios_blog";
 
 let head_image_url = ref("/default_head_image.jpeg")
+let display_head_image = ref(true)
 
 get_user_information().then(
     user => {
         console.log(user)
-        if (user.headImageUrl != null){
-            head_image_url.value = api.getUri() + "/image/download" + user.headImageUrl; 
+        if (user.headImageUrl != null) {
+            head_image_url.value = api.getUri() + "/image/download" + user.headImageUrl;
         }
     }
 ).catch(err => {
-    //获取头像失败，使用默认头像
+    //获取头像失败，认为是未登录
+    display_head_image.value = false
 });
 </script>
 
 <template>
-
-    <img :src = "head_image_url"/>
+    <img v-if="display_head_image" :src="head_image_url" />
+    <span v-else>未登录</span>
 </template>
 
 <style scoped>
