@@ -191,6 +191,7 @@ function sendnew(){
 
 function event_logout_click(){
     token_util.set_token(null);
+    router.go(0)//刷新页面
     router.push("/Login")
 }
 

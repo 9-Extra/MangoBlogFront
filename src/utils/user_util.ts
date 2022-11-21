@@ -7,7 +7,7 @@ export interface User{
     id: number
     nickname: string
     age: number
-    headImageUrl: string
+    headImageUrl?: string
     privilege: string //权限
 }
 

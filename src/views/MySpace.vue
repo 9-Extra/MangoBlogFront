@@ -5,7 +5,6 @@ import router from '@/router';
 import { reactive } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
-import type { CodeInfo } from '@/utils/utils';
 
 
 
@@ -55,8 +54,6 @@ function todetailchange(){
         </div>
         <div class="box">
             
-            
-
             <BlogList id="list_continer"></BlogList>
 
         </div>
@@ -142,6 +139,7 @@ body {
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
     font-size: 0.8vw;
+    cursor: pointer;
 
     position: absolute;
     margin-left: 60vw;
@@ -157,6 +155,7 @@ body {
     color: rgba(2, 2, 0, 0.7);
     transition: 1s;
     font-size: 1.2vw;
+    cursor: pointer;
 
     position: absolute;
     margin-right: 60vw;

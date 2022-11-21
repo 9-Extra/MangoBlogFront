@@ -46,6 +46,7 @@ function event_login_click(){
                 token_util.set_token(info.data)
 
                 popup_message("登录成功", "success");
+                router.go(0)//刷新以保证头像加载
                 router.push("/Blogs")
                 
             }
