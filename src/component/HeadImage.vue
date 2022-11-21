@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import type { User } from '@/utils/user_util';
+import api from '@/utils/axios_blog';
 
 const props = defineProps<{
-    user: User | null
+    head_image_url: string | undefined
 }>()
 
-let head_image_url = "./default_head_image.jpeg"
-if (props.user && props.user.headImageUrl){
-    head_image_url = props.user.headImageUrl
-}
+let head_image_url = props.head_image_url? api.getUri() + "/image/download" + props.head_image_url : "./default_head_image.jpeg"
 
 </script>
 
 <template>
-    <img v-if="user != null" :src="head_image_url" />
+    <img :src="head_image_url" />
 </template>
 
 <style scoped>

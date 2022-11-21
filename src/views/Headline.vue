@@ -52,7 +52,7 @@ function event_new_blog_click(){
             <div class="my">
             <router-link to="/Me" custom v-slot="{ href, route, navigate, isActive, isExactActive }">
                 <li id="head_image" :class="[isExactActive && 'router-link-exact-active']" @click="navigate">
-                    <head-image-vue :user="user_info" />
+                    <head-image-vue v-if="user_info" :head_image_url="user_info.headImageUrl" />
                     <b v-if="user_info">{{user_info.nickname}}</b>
                     <b v-else>未登录</b>
                 </li>

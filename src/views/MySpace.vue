@@ -42,9 +42,7 @@ function todetailchange() {
             <button class="bt2" @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
-
-            <BlogList id="list_continer"></BlogList>
-
+            <BlogList></BlogList>
         </div>
     </body>
 </template>
@@ -80,6 +78,7 @@ body {
     align-items: flex-start;
     width: 1600px;
     height: 700px;
+    margin: 10px;
 
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -164,13 +163,6 @@ h2 {
     left: 23vw;
     top: 4vh;
     font-size: 1vw;
-}
-
-#list_continer {
-    width: 80vw;
-    height: 70%;
-
-    margin-left: 40px;
 }
 
 .buttonbox>button {
