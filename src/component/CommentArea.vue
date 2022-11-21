@@ -221,6 +221,10 @@ img {
 
 }
 
+.blgs:first-child {
+    margin-top: 20px;
+}
+
 .ablog {
     width: 75vw;
     height: 200px;
