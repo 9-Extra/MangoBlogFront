@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import editor from "mavon-editor"
+import 'mavon-editor/dist/css/index.css'
 import { reactive, ref, watch, type Ref } from "vue"
 import popup_message from "@/utils/message_popup";
 import type { Blog } from "@/utils/utils"
@@ -240,7 +241,9 @@ function collectit(bid) {
 
             </div>
         </div>
-        <CommentAreaVue class="comment" :blog_id="blog.id"/>
+        <Suspense>
+            <CommentAreaVue class="comment" :blog_id="blog.id"/>
+        </Suspense>
     </div>
 </template>
 
@@ -257,6 +260,8 @@ function collectit(bid) {
 
     text-align: center;
 
+    overflow: hidden;
+    overflow-y: scroll;
 
 }
 
@@ -276,9 +281,6 @@ function collectit(bid) {
 
     background-color: rgba(255, 255, 255, 0.4);
 
-    text-align: center;
-    word-wrap: break-word;
-
 }
 
 .markdown-body {
@@ -287,8 +289,6 @@ function collectit(bid) {
     margin: 2em auto;
 
     text-align: left;
-    
-    font-size: 2vw;
 }
 .markdown-body video{
     width: 50%;
@@ -298,6 +298,7 @@ function collectit(bid) {
 .comment {
     display: inline;
     margin-top: 2vh;
+    padding-bottom: 50px;
 }
 
 #collect {

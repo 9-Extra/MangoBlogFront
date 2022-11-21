@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, type Ref, watch, type VNode } from "vue"
 import api from "@/utils/axios_blog";
-import { get_user_information } from "@/utils/user_util";
+import { get_user_information_by_id, type User } from "@/utils/user_util";
 import popup_message from "@/utils/message_popup";
 import type { CodeInfo } from "@/utils/utils";
 import type { ElementNode } from "@vue/compiler-core";
@@ -46,22 +46,16 @@ interface Comment {
     id: number,
     blogid: number,
     authorid: number,
-    content: string
+    content: string,
+
+    author_nick_name?: string,
+    author_head_image?: string
 }
 
 interface Commentsend {
     blogid: number,
     authorid: number,
-    content: string
-}
-
-interface users {
-    id:number
-    cid: number
-    nickname: string
-    headImageUrl: string
-    realimgurl:string
-    content:string
+    content: string,
 }
 
 const props = defineProps<{
@@ -71,26 +65,37 @@ const props = defineProps<{
 const comments: Ref<Comment[]> = ref([])
 const textareaRef: InstanceType<any> = ref(null);
 const content = ref('')
-let users_list: Ref<users[]> = ref([])
+let complete = ref(false)
 
-function get_comments() {
+async function get_comments() {
+    complete.value = false
     api.get(`/comment/get/${props.blog_id}`).then(
         response => {
             let data: CodeInfo<Comment[]> = response.data;
             if (data.code != 0) {
                 popup_message("获取评论失败: " + data.message, "error")
             } else {
-                
                 comments.value = data.data
-                console.log(comments.value)
             }
         }
     ).catch(
         err => {
             popup_message("获取评论失败: " + err.message, "error")
         }
-    )
-   
+    ).then(async () => {
+        for (let comment of comments.value) {
+        if (!comment.author_nick_name) {
+            await get_user_information_by_id(comment.authorid).then(
+                user => {
+                    comment.author_nick_name = user.nickname
+                    comment.author_head_image = user.headImageUrl
+                }
+            )
+        }
+    }
+    complete.value = true
+    })
+
 }
 
 function deletecomment(cid){
@@ -98,7 +103,7 @@ function deletecomment(cid){
         response => {
             if(response.data.code == 0){
                 popup_message("删除成功", "success")
-                router.go(0)
+                get_comments()
             }
         }).catch(
         err => {
@@ -126,7 +131,7 @@ function adjustTextareaSize() {
 }
 
 function event_publish_click() {
-    if (content.value.length == 0){
+    if (content.value.length == 0) {
         popup_message("评论不能为空", "warn");
         return;
     }
@@ -140,63 +145,21 @@ function event_publish_click() {
     api.post("/comment/add", comment).then(
         response => {
             let data: CodeInfo<boolean> = response.data;
-            if (data.code != 0){
+            if (data.code != 0) {
                 popup_message("发布评论失败:" + data.message, "error")
             } else {
-                router.go(0)//刷新评论区
                 popup_message("发布评论成功", "success")
             }
         }
-        
+
     ).catch(err => {
         popup_message("发布评论失败:" + err.message, "error")
     })
 }
 
-get_comments()//获取所有评论
+await get_comments()//获取所有评论
 
-async function getheaders(){
-    users_list.value.slice(0,1);
-    await api.get(`/comment/get/${props.blog_id}`).then(
-        response => {
-            let data: CodeInfo<Comment[]> = response.data;
-            if (data.code != 0) {
-                popup_message("获取评论失败: " + data.message, "error")
-            } else {
-                
-                comments.value = data.data
-                console.log(comments.value)
-            }
-        }
-    ).catch(
-        err => {
-            popup_message("获取评论失败: " + err.message, "error")
-        }
-    )
-    console.log(comments.value)
-
-    for (let index = 0; index < comments.value.length; index++) {
-            await api.get("/user/" + comments.value[index].authorid).then(response => {
-                    
-                    users_list.value.push(response.data.data)
-            }).catch(error => {
-            popup_message("获取用户名失败: " + error.message, "error")
-            })
-        
-    }
-
-    for (let index = 0; index < comments.value.length; index++) {
-        users_list.value[index].content = comments.value[index].content
-        users_list.value[index].realimgurl = api.getUri() + "/image/download" + users_list.value[index].headImageUrl;
-        users_list.value[index].cid = comments.value[index].id
-    }
-
-    console.log(users_list.value)
-}
-
-getheaders()
-
-
+let user_info_store: Ref<Map<number, User>> = ref(new Map())
 
 </script>
 
@@ -205,17 +168,16 @@ getheaders()
 
         <div class="box">
 
-        <div class="blgs">
-        <div class="ablog" v-for="comment in users_list">
-            <div class="nambox">
-            <img class="head_image" v-if="true" :src="comment.realimgurl" />
-            <h3>{{ comment.nickname }}</h3>
-            <button v-if="meinfo.id == comment.id || meinfo.privilege == '1'" @click="deletecomment(comment.cid)">删除</button>
-            </div>
-            <h4>{{ comment.content }}</h4>
+            <div class="blgs">
+                <div class="ablog" v-if="complete" v-for="comment in comments">
+                    <div class="nambox">
+                        <HeadImageVue :head_image_url="comment.author_head_image? comment.author_head_image : null"/>
+                        <h3>{{ comment.author_nick_name }}</h3>
+                    </div>
+                    <h4>{{ comment.content }}</h4>
 
-        </div>
-        </div>
+                </div>
+            </div>
 
         </div>
 
@@ -233,14 +195,14 @@ getheaders()
 <style scoped>
 #main {
     display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-  
+
 }
 
-.head_image{
+.head_image {
 
     margin: 10px;
 }
@@ -267,9 +229,9 @@ background-color: rgba(255, 34, 56, 0.838);
 
 .nambox {
     display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 img {
@@ -280,36 +242,42 @@ img {
     object-position: center;
     border: 1px solid wheat;
 }
-.blgs {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: center;
-  width: 80vw;
-  height: 70vh;
 
-  backdrop-filter: blur(10px);
-  overflow: hidden;
+.blgs {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    width: 80vw;
+    height: 70vh;
+
+    backdrop-filter: blur(10px);
+    overflow: hidden;
     overflow-y: scroll;
 
 }
+
+.blgs:first-child {
+    margin-top: 20px;
+}
+
 .ablog {
-  width: 75vw;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: flex-start;
-  margin-left: 1vw;
-  margin-top: 1vh;
+    width: 75vw;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-start;
+    margin-left: 1vw;
+    margin-top: 1vh;
 
-  border-top: 1px solid rgba(0, 0, 0, 0.5);
-  border-left: 1px solid rgba(0, 0, 0, 0.5);
-  border-bottom: 1px solid rgba(5, 0, 0, 0.2);
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    border-left: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(5, 0, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 
-  background-color: rgb(255, 205, 139);
+    background-color: rgb(255, 205, 139);
 }
 
 
@@ -318,8 +286,8 @@ img {
 
 .ablog>h3 {
 
-  margin-left: 4vw;
-  font-size: 2vw;
+    margin-left: 4vw;
+    font-size: 2vw;
 }
 
 .ablog>h4 {
@@ -327,21 +295,22 @@ img {
     margin-top: 1vh;
     margin-bottom: 8vh;
     margin-left: 1vw;
-  font-size: 1.3vw;
-  word-break: break-all;
-  word-wrap: break-word;
-  text-align: left;
+    font-size: 1.3vw;
+    word-break: break-all;
+    word-wrap: break-word;
+    text-align: left;
 }
 
 h3:hover {
-  text-decoration: underline;
-  cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 h4:hover {
-  text-decoration: underline;
-  cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
+
 .commentbox {
     margin: 1em auto;
     width: 70%;
@@ -349,12 +318,12 @@ h4:hover {
 
 #comment-text-box {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     justify-content: center;
     align-items: flex-end;
     margin: 0 auto;
     width: 50%;
-    
+
     margin-top: 5vh;
 }
 
@@ -446,7 +415,7 @@ table.imagetable th {
     background: rgba(255, 174, 52, 0.724)
 }
 
-.id2 > a {
+.id2>a {
     cursor: pointer;
 }
 
@@ -460,6 +429,5 @@ table.imagetable td {
     border-color: #999999;
     font-size: 2vw;
 }
-
 </style>
   
