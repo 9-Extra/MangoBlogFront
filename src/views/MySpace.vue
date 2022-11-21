@@ -2,42 +2,31 @@
 import { get_user_information, upload_head_image, type User } from '@/utils/user_util';
 import token_util from "@/utils/token_util";
 import router from '@/router';
-import { reactive } from 'vue';
+import { reactive, ref, type Ref } from 'vue';
 import popup_message from '@/utils/message_popup';
 import BlogList from '@/component/BlogList.vue';
 
-
+let user: Ref<User | null> = ref(null)
 
 if (!token_util.get_token()) {
+    popup_message("请先登录", "warn")
     router.replace("/Login")
+} else {
+    get_user_information().then(
+        user_rep => {
+            user.value = user_rep
+        }
+    ).catch(err => {
+        popup_message("后端异常: " + err.message, "error")
+        router.replace("/Login")
+    })
 }
 
-let user: User = reactive({
-    id: 0,
-    nickname: '',
-    age: 0,
-    headImageUrl: '',
-    privilege: ''
-})
-
-get_user_information().then(
-    user_rep => {
-        user.id = user_rep.id
-        user.nickname = user_rep.nickname
-        user.headImageUrl = user_rep.headImageUrl
-        user.privilege = user_rep.privilege
-    }
-)
-.catch(err => {
-    popup_message("后端异常: " + err.message, "error")
-    router.replace("/Login")
-})
-
-function tocollection(){
+function tocollection() {
     router.replace("/Collection")
 }
 
-function todetailchange(){
+function todetailchange() {
     router.replace("/Detailchange")
 }
 
@@ -45,15 +34,15 @@ function todetailchange(){
 
 <template>
 
-    <body>
+    <body v-if="user != null">
         <div class="titlebox">
             <button class="bt1" @click="todetailchange">我的资料</button>
             <h1>我的主页</h1>
-            <h2>我的id:{{user.id}}</h2>
+            <h2>我的id:{{ user.id }}</h2>
             <button class="bt2" @click="tocollection">我的收藏</button>
         </div>
         <div class="box">
-            
+
             <BlogList id="list_continer"></BlogList>
 
         </div>
@@ -129,7 +118,7 @@ body {
 }
 
 
-.bt2{
+.bt2 {
     margin: 10px;
     width: 5vw;
     height: 4vh;
@@ -145,7 +134,7 @@ body {
     margin-left: 60vw;
 }
 
-.bt1{
+.bt1 {
     margin: 10px;
     width: 8vw;
     height: 6vh;
@@ -168,7 +157,8 @@ h1 {
     color: rgb(13, 13, 12);
     font-size: 3vw;
 }
-h2{
+
+h2 {
     width: 25vw;
     position: absolute;
     left: 23vw;
@@ -201,7 +191,5 @@ button:hover {
 }
 
 
-  /* 确认弹框 end */
-
-
+/* 确认弹框 end */
 </style>
