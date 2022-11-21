@@ -56,6 +56,7 @@ console.log(is_me)
 let user_info: User = reactive({
     id: 0,
     nickname: "",
+    age:0,
     headImageUrl: "",
     privilege: ""
 })
