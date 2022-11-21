@@ -290,10 +290,6 @@ function collectit(bid) {
 
     text-align: left;
 }
-.markdown-body video{
-    width: 50%;
-    height: auto;
-}
 
 .comment {
     display: inline;
@@ -318,4 +314,12 @@ function collectit(bid) {
     cursor: pointer;
 }
 </style>
+
+<style>
+.markdown-body video{
+    width: 100%;
+    height: auto;
+}
+</style>
+
   
