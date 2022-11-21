@@ -21,7 +21,7 @@ get_user_information().then(
 
 <template>
     <img v-if="display_head_image" :src="head_image_url" />
-    <span v-if="!display_head_image">未登录</span>
+    <span v-else>未登录</span>
 </template>
 
 <style scoped>

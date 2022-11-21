@@ -89,13 +89,11 @@ function event_exchange(bid){
         <table class="imagetable">
             <tr>
                 <th class="id1">博客id</th>
-                <th class="id1">作者id</th>
                 <th class="description">简介</th>
                 <th class="statuses">状态</th>
             </tr>
             <tr class="blog_line"  v-for=" blog in blog_list">
                 <td class="id1">{{ blog.id }}</td>
-                <td class="id1">{{ blog.authorid }}</td>
                 <td class="description" @click="event_open_blog_click(blog.id)">{{ blog.description }}
                     <button class="delete" @click.stop="event_deleteblog(blog.id)">删除</button>
                 </td>
