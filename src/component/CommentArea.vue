@@ -7,7 +7,7 @@ import type { CodeInfo } from "@/utils/utils";
 import type { ElementNode } from "@vue/compiler-core";
 import router from "@/router";
 
-export interface User{
+interface User{
     id: number
     nickname: string
     age: number
@@ -246,9 +246,9 @@ getheaders()
 }
 
 .nambox > button{
-    position:relative;
+    position:absolute;
         margin-top: 0vh;
-        margin-left:60vw;
+        margin-left:130vw;   
         width: 4vw;
         height: 20px;
         border-radius: 20px;
