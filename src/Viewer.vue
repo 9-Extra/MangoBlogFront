@@ -6,6 +6,7 @@ import popup_message from "@/utils/message_popup";
 import type { Blog } from "@/utils/utils"
 import api from "@/utils/axios_blog";
 
+let md = editor.markdownIt;//获取mavon-editor中的markdown-it对象
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
@@ -56,6 +57,12 @@ api.get(`/open/blog/${blog.id}`).then(
             blog.content = result.data.content
 
             document.title = blog.description
+            
+            let main = document.getElementById("markdown-body");
+            if (main){
+                console.log(main.innerHTML)
+                main.innerHTML = md.render(blog.content)
+            }
         }
     }
 ).catch(err => {
@@ -65,7 +72,12 @@ api.get(`/open/blog/${blog.id}`).then(
 
 <template>
     <div id="main">
-        <editor.mavonEditor :editable="false" :toolbarsFlag="false" :subfield="false" defaultOpen="preview" v-model="blog.content"></editor.mavonEditor>
+        <h2 id="title">{{blog.description}}</h2>
+        <div class = "markdown-box">
+            <div id = "markdown-body">
+
+            </div>
+        </div>
     </div>
 </template>
 
@@ -73,64 +85,44 @@ api.get(`/open/blog/${blog.id}`).then(
 @charset "utf-8";
 
 #main {
-    height: 90vh;
+    height: 100vh;
+    background: url("@/resources/image/Avg_cc_start.png") no-repeat;
+    background-size: cover;/*合在一起写的时候无法识别 */
+    background-attachment: fixed;
+    background-position: center;
+    background-origin: border-box;
+
+    text-align: center;
+
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
-.dropdown-wrapper {
-    position: relative;
-    cursor: pointer;
+#title {
+    font-size: 5em;
 }
 
-.popup-dropdown {
-    position: absolute;
-    display: block;
-    background: #fff;
-    top: 32px;
-    left: -45px;
-    min-width: 130px;
-    z-index: 1600;
-    border: 1px solid #ebeef5;
-    border-radius: 4px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+.markdown-box{
+    width: 70%;
+    display:inline-block;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+    border: solid 2px rgba(255, 255, 255, 0.2);
 
-    cursor: pointer;
+    border-radius: 10px;
+
+    text-align: center;
+    word-wrap: break-word;
 }
 
-.dropdown-item {
-    border-radius: 3px;
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-    color: #606266;
-    position: relative;
-    transition: 0.3s;
-    cursor: pointer;
+#markdown-body {
+    width: 90%;
+    display:inline-block;
+    margin: 0 auto;
 
-    white-space: pre-line;
+    text-align: left;
 }
-
-.dropdown-item:hover {
-    color: rgb(37, 36, 36);
-    background-color: #f0f0f0;
-}
-
-input[type=file] {
-    position: absolute;
-    font-size: 100px;
-    right: 0;
-    top: 0;
-    opacity: 0;
-    overflow: visible;
-    cursor: pointer;
-
-    
-}
-
-.fa-mavon-upload-video::before {
-    content: url("/video.ico");
-}
-
-.markdown-body video{
+#markdown-body video{
     width: 50%;
     height: auto;
 }

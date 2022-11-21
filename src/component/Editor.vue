@@ -125,10 +125,8 @@ watch(() => blog.description, (newValue, oldValue) => {
     if (id == null) {
         await blog_new().then(
             response => {
-
                 if (response.data.code != 0) {
                     error_exit("新建博客失败: " + response.data.message)
-                    console.log(response)
                 } else {
                     let id = response.data.data;
                     history.replaceState({}, document.title, "?id=" + id)
@@ -230,8 +228,8 @@ function event_post_click() {
 
 <template>
     <div id="main">
-        <editor.mavonEditor ref="md" @imgAdd=img_add @imgDel=img_del @save=event_edit_click v-model="blog.content"
-            :toolbars=toolbars>
+        <editor.mavonEditor id="editor" ref="md" @imgAdd=img_add @imgDel=img_del @save=event_edit_click
+            v-model="blog.content" :toolbars=toolbars>
             <template v-slot:left-toolbar-after>
                 <div @mouseleave="$mouseleave_img_dropdown" @mouseenter="$mouseenter_img_dropdown"
                     class="op-icon fa fa-mavon-upload-video dropdown-wrapper" aria-hidden="true" title="上传视频">
@@ -247,11 +245,13 @@ function event_post_click() {
                 </div>
             </template>
         </editor.mavonEditor>
-        <button @click=event_edit_click>保存</button>
-        <button @click=event_post_click>发布</button>
-        <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
-        <button @click=event_video_upload>上传</button>
-        <progress v-if=is_uploading :value=upload_process max=1.0></progress>
+        <div id="operation">
+            <button @click=event_edit_click>保存</button>
+            <button @click=event_post_click>发布</button>
+            <input class="style_file_content" accept="*" type="file" id="upload_file_id" />
+            <button @click=event_video_upload>上传</button>
+            <progress v-if=is_uploading :value=upload_process max=1.0></progress>
+        </div>
     </div>
 </template>
 
@@ -259,7 +259,16 @@ function event_post_click() {
 @charset "utf-8";
 
 #main {
-    height: 90vh;
+    height: 100vh;
+}
+
+#editor {
+    height: 90%;
+}
+
+#operation {
+    float: right;
+
 }
 
 .dropdown-wrapper {
@@ -309,14 +318,14 @@ input[type=file] {
     overflow: visible;
     cursor: pointer;
 
-    
+
 }
 
 .fa-mavon-upload-video::before {
     content: url("/video.ico");
 }
 
-.markdown-body video{
+.markdown-body video {
     width: 50%;
     height: auto;
 }
