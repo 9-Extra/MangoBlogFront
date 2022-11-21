@@ -251,7 +251,6 @@ function collectit(bid) {
 @charset "utf-8";
 
 #main {
-    height: 100vh;
     background: url("@/resources/image/Avg_cc_start.png") no-repeat;
     background-size: cover;/*合在一起写的时候无法识别 */
     background-attachment: fixed;

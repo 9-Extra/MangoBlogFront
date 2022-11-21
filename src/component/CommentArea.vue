@@ -84,32 +84,32 @@ async function get_comments() {
         }
     ).then(async () => {
         for (let comment of comments.value) {
-        if (!comment.author_nick_name) {
-            await get_user_information_by_id(comment.authorid).then(
-                user => {
-                    comment.author_nick_name = user.nickname
-                    comment.author_head_image = user.headImageUrl
-                }
-            )
+            if (!comment.author_nick_name) {
+                await get_user_information_by_id(comment.authorid).then(
+                    user => {
+                        comment.author_nick_name = user.nickname
+                        comment.author_head_image = user.headImageUrl
+                    }
+                )
+            }
         }
-    }
-    complete.value = true
+        complete.value = true
     })
 
 }
 
-function deletecomment(cid){
-    api.post("/comment/delete?commentid="+cid).then(
+function deletecomment(cid) {
+    api.post("/comment/delete?commentid=" + cid).then(
         response => {
-            if(response.data.code == 0){
+            if (response.data.code == 0) {
                 popup_message("删除成功", "success")
                 get_comments()
             }
         }).catch(
-        err => {
-            popup_message("删除失败: " + err.message, "error")
-        }
-    )
+            err => {
+                popup_message("删除失败: " + err.message, "error")
+            }
+        )
 }
 
 
@@ -199,8 +199,6 @@ let user_info_store: Ref<Map<number, User>> = ref(new Map())
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-
 }
 
 .head_image {
@@ -224,8 +222,8 @@ let user_info_store: Ref<Map<number, User>> = ref(new Map())
 }
 
 button:hover {
-border: 1px solid rgba(255, 34, 56, 0.8);
-background-color: rgba(255, 34, 56, 0.838);
+    border: 1px solid rgba(255, 34, 56, 0.8);
+    background-color: rgba(255, 34, 56, 0.838);
 }
 
 .nambox {
@@ -250,7 +248,6 @@ img {
     justify-content: left;
     align-items: center;
     width: 80vw;
-    height: 70vh;
 
     backdrop-filter: blur(10px);
     overflow: hidden;
