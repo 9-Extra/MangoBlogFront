@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import editor from "mavon-editor"
 import 'mavon-editor/dist/css/index.css'
+import MarkdownIt from "markdown-it"
 import { reactive, ref, watch, type Ref } from "vue"
 import popup_message from "@/utils/message_popup";
 import type { Blog } from "@/utils/utils"
@@ -55,7 +56,7 @@ let authorinfo = ref({
     privilege: ''
 })
 
-let md = editor.markdownIt;//获取mavon-editor中的markdown-it对象
+let md = editor.markdownIt || new MarkdownIt();//获取mavon-editor中的markdown-it对象，生产构建下回退到独立 markdown-it
 
 function get_blog_id(): number | null {
     let params = new URLSearchParams(document.location.search.substring(1))
